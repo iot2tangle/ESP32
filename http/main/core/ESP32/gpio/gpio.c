@@ -4,18 +4,28 @@
 #include <stdbool.h>
 #include "gpio.h"
 
+#include "freertos/FreeRTOS.h"
+#include "driver/gpio.h"
+
+#define GREEN_LED 2
+#define RED_LED 0
+
+
 void init_LEDs()
 {
-	// INIT LEDS GPIO	
+    gpio_pad_select_gpio(GREEN_LED);
+    gpio_set_direction(GREEN_LED, GPIO_MODE_OUTPUT);
+    
+    gpio_pad_select_gpio(RED_LED); 
+    gpio_set_direction(RED_LED, GPIO_MODE_OUTPUT);
 }
 
 void led_GPIO(int led, int mode)
 {
-//    if (led == 0)
-	// LED 0 -> on (mode==1) or off (mode==0)
-//    else
-	// LED 1 -> on (mode==1) or off (mode==0)
-;
+    if (led == 0)
+	gpio_set_level(GREEN_LED, mode);
+    else
+	gpio_set_level(RED_LED, mode);
 }
 
 

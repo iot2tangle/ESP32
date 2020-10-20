@@ -88,12 +88,12 @@ void led_blinks(int led, int iter, int usec)	// LED Blink function-> led: 0 Gree
 
 void connectNetwork(struct device *z)
 {	
-	#ifdef MICROCONTROLLER								
+	#ifdef MICROCONTROLLER
+	udelay_basics ( 50000 );							
 	while ( !connectAttempt() )    /* Attempt to connect to the network via WiFi, in RaspberryPi only check connection to the network. */
 	{
-		udelay_basics ( 100000 );
-		led_blinks(0, 2, 200000);	// Blink in green GREEN - ERROR 0 (No WiFi connection);
-		led_blinks(1, 2, 200000);	// Blink in green RED - ERROR 0 (No WiFi connection);
+		led_blinks(0, 1, 600000);	// Blink in green GREEN - ERROR 0 (No WiFi connection);
+		led_blinks(1, 1, 600000);	// Blink in green RED - ERROR 0 (No WiFi connection);
 	}
 	#endif
 
