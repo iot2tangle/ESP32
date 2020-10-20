@@ -15,27 +15,17 @@
 #endif
 
 void config(struct device *z)
-{
-    /* User assignments */
-    z->id = id_name;
+{   
+    #ifdef MQTT
+    	    z->user_mqtt = user;
+	    z->pass_mqtt = password;
+	    z->top = topic;
+    #endif
 
-    z->ep = endpoint;
-    z->ep_port = port;
-    z->user_mqtt = user;
-    z->pass_mqtt = password;
-    z->top = topic;
-
-    z->WiFi = isWifi;    /* In RaspberryPi it will be false, because the network connection is made outside the program by the Raspberry OS*/
-    if (isWifi)
-    {
-        z->ssid = ssid_WiFi;
-        z->pass = pass_WiFi;
-    }
-    else
-    {
-        z->ssid = "";
-        z->pass = "";
-    }
+    #ifdef MICROCONTROLLER
+        z->ssid_wifi = ssid_WiFi;
+        z->pass_wifi = pass_WiFi;
+    #endif
 
     z->isEnable[0] = isEnable_TemperatureIntern;
     z->isEnable[1] = isEnable_TemperatureExtern;
@@ -97,9 +87,15 @@ void led_blinks(int led, int iter, int usec)	// LED Blink function-> led: 0 Gree
 }
 
 void connectNetwork(struct device *z)
-{									
-//  while ( !connectAttempt() )    /* Attempt to connect to the network via WiFi, in RaspberryPi only check connection to the network. */
-//  	error(1);
+{	
+	#ifdef MICROCONTROLLER								
+	while ( !connectAttempt() )    /* Attempt to connect to the network via WiFi, in RaspberryPi only check connection to the network. */
+	{
+		udelay_basics ( 100000 );
+		led_blinks(0, 2, 200000);	// Blink in green GREEN - ERROR 0 (No WiFi connection);
+		led_blinks(1, 2, 200000);	// Blink in green RED - ERROR 0 (No WiFi connection);
+	}
+	#endif
 
 	if ( !isEndpointOk(z->ep, z->ep_port, z->user_mqtt, z->pass_mqtt) )     /* Check Endpoint */
 	{	

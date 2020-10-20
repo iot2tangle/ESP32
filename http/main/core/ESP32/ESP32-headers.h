@@ -9,6 +9,10 @@
 #include "bh1750/bh1750.h"
 #include "acoustic/acoustic.h"
 
+#ifdef MICROCONTROLLER
+	#include "wifi/wifi.h"
+#endif
+
 #ifdef HTTP
 	#include "http-socket/http-socket.h"
 #endif

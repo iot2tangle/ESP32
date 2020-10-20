@@ -5,21 +5,15 @@
 
 
 /* Device */
-const char* id_name = "MyDevice-I2T";
+const char* id_name = "ESP32-I2T";
 
-
-/* Endpoint/Broker Configuration */
-const char* endpoint = "localhost/iot2tangle";  /* Endpoint (HTTP) or Broker address (MQTT), must NOT include 'http://xxx' or 'tcp://xxx' */
-int port = 8080;
-const char* topic = "iot2tangle";	/* Only for MQTT Protocol, leave empty in HTTP */
-const char* user = "user";		/* Only for MQTT Protocol, leave empty in HTTP */
-const char* password = "pass";	/* Only for MQTT Protocol, leave empty in HTTP */
-
-/* Network Configuration (Only for microcontrollers) */
-bool isWifi = false; /* This is 'true' for microcontrollers like ESP32 or STM32. In RaspberryPi it will be 'false', because the network connection is made outside the program by the Raspberry OS */
+/* Network Configuration */
 const char* ssid_WiFi = "SSID-WIFI";
 const char* pass_WiFi = "pass_WiFi";
 
+/* HTTP Endpoint Configuration */
+const char* endpoint = "182.168.1.132/iot2tangle";  /* Endpoint address (HTTP), must NOT include 'http://xxx' or 'tcp://xxx' */
+int port = 8080;
 
 /* Enable Sensors */
 bool isEnable_TemperatureIntern = true;

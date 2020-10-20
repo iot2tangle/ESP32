@@ -14,9 +14,8 @@ struct device {
    const char *pass_mqtt;   
    const char *top;    
 
-   bool WiFi;
-   const char *ssid;
-   const char *pass;
+   const char *ssid_wifi;
+   const char *pass_wifi;
    
    bool isEnable[12];
    char d[12][10];    /* Sensors Data String */
