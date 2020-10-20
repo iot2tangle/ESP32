@@ -30,7 +30,7 @@ bool isEnable_Gyroscope_Y = true;
 bool isEnable_Gyroscope_Z = true;
 
 /* Interval of time */
-long interval = 10;    /* Time in seconds between */
+long interval = 5;    /* Time in seconds between */
 
 
 #endif

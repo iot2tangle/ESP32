@@ -299,7 +299,6 @@ void generateJson(struct device *z)
 	strcat(z->json, "]}");
     }	 
 	strcat(z->json, "],\"device\": \"");
-	printf("ID de mierda: %s\n\n", z->id);
 	strcat(z->json, z->id);
 	strcat(z->json, "\",\"timestamp\": \"0\"}");
 	

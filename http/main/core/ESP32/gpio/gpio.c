@@ -31,9 +31,9 @@ void led_GPIO(int led, int mode)
 
 bool read_GPIO(int pin)
 {
-//  IF PIN pin == true
-//	return true;
-//    else
-//	return false;
-return true;
+    // Must be inicializated first
+    if ( gpio_get_level(pin) ) 
+	return true;
+    else
+	return false;
 }

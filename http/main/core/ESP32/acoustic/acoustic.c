@@ -4,19 +4,33 @@
 #include <stdbool.h>
 #include "acoustic.h"
 
+#include "freertos/FreeRTOS.h"
+#include "driver/gpio.h"
+
+#define ACOUSTIC_ENABLE 23	// GPIO
+#define ACOUSTIC_DATA 22	// GPIO
+
 char buffer[100];
 char* s;
 
 bool check_acoustic()
 {
-	// IF ACOUTIC SENSOR IS DETECTED  
-	return true;
+    if ( gpio_get_level(ACOUSTIC_ENABLE) ) 
+	return false;
+    else
+    	return true;	
 }
 
 void init_acoustic(bool ft)
 {
-	; //INIT ACOUSTIC SENSOR
-}
+    gpio_pad_select_gpio(ACOUSTIC_ENABLE);
+    gpio_set_direction(ACOUSTIC_ENABLE, GPIO_MODE_INPUT);
+    gpio_set_pull_mode(ACOUSTIC_ENABLE, GPIO_PULLUP_ONLY);	// Set PullUp
+    
+    gpio_pad_select_gpio(ACOUSTIC_DATA);
+    gpio_set_direction(ACOUSTIC_DATA, GPIO_MODE_INPUT);
+    gpio_set_pull_mode(ACOUSTIC_DATA, GPIO_PULLDOWN_ONLY);	// Set PullDown
+} 
 
 void print_acoustic()
 {
@@ -30,12 +44,10 @@ char* get_acoustic()
 {
     s = " ";
 
-//  READ SENSOR DATA
-
-//  IF SENSOR DATA == HIGH
+    if ( gpio_get_level(ACOUSTIC_DATA) ) 
 	sprintf(buffer, "High");
-//    else
-//	sprintf(buffer, "Low");
+    else
+	sprintf(buffer, "Low");
 
     s=buffer;
     return s;
