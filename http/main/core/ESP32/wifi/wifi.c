@@ -4,7 +4,7 @@
 
 bool connectAttempt() 
 {
-    bool b = false;
+    bool b = true;
     
     if (!b)
     	printf("NO WIFI\n");

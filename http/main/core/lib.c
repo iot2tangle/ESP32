@@ -16,6 +16,9 @@
 
 void config(struct device *z)
 {   
+    /* User assignments */
+    z->id = id_name;
+
     #ifdef MQTT
     	    z->user_mqtt = user;
 	    z->pass_mqtt = password;
@@ -163,6 +166,7 @@ void getData(struct device *z, long *c)
  	for (i=0; i<6; i++)
 	    strcpy(z->d[i+6], "0");
     }
+    
 }
 
 
@@ -171,7 +175,7 @@ void generateJson(struct device *z)
     int i, aux;
 
     strcpy(z->json, "{\"iot2tangle\":[");
-	
+    
     aux = 0;
     strcat(z->json, "{\"sensor\":\"Internal\",\"data\":[");
     for (i=0;i<1;i++)
@@ -231,7 +235,7 @@ void generateJson(struct device *z)
 	}
 	strcat(z->json, "]}");
     }
-	
+    
     if (check_bh1750())
     {
 	aux = 0;
@@ -252,7 +256,7 @@ void generateJson(struct device *z)
 	}
 	strcat(z->json, "]}");
     }
-	
+	 
     if (check_mpu6050())
     {
 	aux = 0;
@@ -293,11 +297,11 @@ void generateJson(struct device *z)
 		aux++;
 	}
 	strcat(z->json, "]}");
-    }
-
+    }	 
 	strcat(z->json, "],\"device\": \"");
+	printf("ID de mierda: %s\n\n", z->id);
 	strcat(z->json, z->id);
-	strcat(z->json, "\",\"timestamp\": \"0\"}");	
+	strcat(z->json, "\",\"timestamp\": \"0\"}");
 	
     #ifdef SHELLPRINT	
     	print_json(z->json);	// Printf in shell
