@@ -5,11 +5,11 @@
 
 
 /* Device */
-const char* id_name = "ESP32-I2T";
+const char* id_name = "ESP32-HTTP";
 
 /* Network Configuration */
-const char* ssid_WiFi = "SSID-WIFI";
-const char* pass_WiFi = "pass_WiFi";
+const char* ssid_WiFi = "mySSID";
+const char* pass_WiFi = "myPASS";
 
 /* HTTP Endpoint Configuration */
 const char* endpoint = "182.168.1.132/iot2tangle";  /* Endpoint address (HTTP), must NOT include 'http://xxx' or 'tcp://xxx' */

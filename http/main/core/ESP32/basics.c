@@ -62,7 +62,6 @@ void print_json(char* js)
 void udelay_basics (long d)
 {
     vTaskDelay( (d/1000) / portTICK_PERIOD_MS);
-   // usleep(d);	// This delay works in almost all C compilers, but you need to replace it when you put your device
 }
 
 long take_time_basics()
