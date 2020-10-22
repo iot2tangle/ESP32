@@ -18,6 +18,9 @@ void config(struct device *z)
 {   
     /* User assignments */
     z->id = id_name;
+        
+    z->ep = endpoint;
+    z->ep_port = port;
 
     #ifdef MQTT
     	    z->user_mqtt = user;
@@ -309,7 +312,7 @@ void generateJson(struct device *z)
 
 bool sendtoEndpoint(struct device *z)
 {
-    bool b_socket = socket_sender(z->ep, z->ep_port, z->top, z->user_mqtt, z->pass_mqtt, z->json, z->interv);
+    bool b_socket = socket_sender(z->ep, z->ep_port, "s", "sd", "ssdf", z->json, z->interv);
     if (b_socket)
 		led_blinks(0, 2, 60000);	// Blink in green LED;
     else

@@ -55,8 +55,7 @@ void print_sensors_state()
 void print_json(char* js)
 {
     printf("\nJSON: %s\n", js);
-    printf("\n	---- Virtual device ---- This is just a demo of I2T C Core ----\n");
-    printf("	Sending Data to Tangle...\n");
+    printf("\n	Sending Data to Tangle...\n");
 }
 
 void udelay_basics (long d)
