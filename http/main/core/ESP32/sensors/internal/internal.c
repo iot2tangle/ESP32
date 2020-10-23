@@ -2,13 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "tIntern.h"
+#include "internal.h"
 
 char buffer[400];
 char *s;
 float data;
 
-char* get_internal_temp() 
+void init_internal(bool ft)
+{
+	;
+}
+
+char* get_internal() 
 {
     s = " ";
 

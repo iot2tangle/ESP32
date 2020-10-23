@@ -8,11 +8,12 @@
 struct device {
    const char *id;
 
-   const char *ep;
-   int ep_port;
+   const char *addr;
+   int addr_port;
+   const char *top;    
    const char *user_mqtt;
    const char *pass_mqtt;   
-   const char *top;    
+
 
    const char *ssid_wifi;
    const char *pass_wifi;

@@ -2,8 +2,8 @@
 #include <string.h>
 #include <stdbool.h>
 #include "config.h"
-#include "lib.h"
-#include "struct-device.h"
+#include "core/lib.h"
+#include "core/struct-device.h"
 
 
 struct device dev;

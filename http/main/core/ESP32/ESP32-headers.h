@@ -2,23 +2,25 @@
 #define ESP32_HEADERS_H
 
 #include "basics.h"
-#include "gpio/gpio.h"
-#include "tIntern/tIntern.h"
-#include "bme280/bme280.h"
-#include "mpu6050/mpu6050.h"
-#include "bh1750/bh1750.h"
-#include "acoustic/acoustic.h"
+#include "peripherals/gpio/gpio.h"
+#include "peripherals/i2c/i2c.h"
+#include "peripherals/spi/spi.h"
+#include "sensors/internal/internal.h"
+#include "sensors/bme280/bme280.h"
+#include "sensors/mpu6050/mpu6050.h"
+#include "sensors/bh1750/bh1750.h"
+#include "sensors/acoustic/acoustic.h"
 
 #ifdef MICROCONTROLLER
 	#include "wifi/wifi.h"
 #endif
 
 #ifdef HTTP
-	#include "http-socket/http-socket.h"
+	#include "protocols/http/http.h"
 #endif
 
 #ifdef MQTT
-	#include "mqtt-socket/mqtt-socket.h"
+	#include "protocols/mqtt/mqtt.h"
 #endif
 
 #endif

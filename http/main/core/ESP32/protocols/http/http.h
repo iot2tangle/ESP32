@@ -1,5 +1,5 @@
-#ifndef _SOCKET_H_
-#define _SOCKET_H_
+#ifndef _HTTP_H_
+#define _HTTP_H_
 
 #include "freertos/FreeRTOS.h"
 #include "esp_log.h"

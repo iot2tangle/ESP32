@@ -4,7 +4,7 @@
 #include "esp_log.h"
 #include "esp_netif.h"
 #include "esp_tls.h"
-#include "http-socket.h"
+#include "http.h"
 
 #include "esp_http_client.h"
 

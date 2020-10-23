@@ -6,10 +6,10 @@
 #include <time.h> 
 #include <unistd.h>
 #include "basics.h"
-#include "bme280/bme280.h"
-#include "mpu6050/mpu6050.h"
-#include "bh1750/bh1750.h"
-#include "acoustic/acoustic.h"
+#include "sensors/bme280/bme280.h"
+#include "sensors/mpu6050/mpu6050.h"
+#include "sensors/bh1750/bh1750.h"
+#include "sensors/acoustic/acoustic.h"
 
 /* ESP32 FreeRTOS DEPENDENCIES */
 #include "freertos/FreeRTOS.h"

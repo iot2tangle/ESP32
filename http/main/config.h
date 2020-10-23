@@ -12,7 +12,7 @@ const char* ssid_WiFi = "mySSID";
 const char* pass_WiFi = "myPASS";
 
 /* HTTP Endpoint Configuration */
-const char* endpoint = "192.168.1.101/sensor_data";  /* Endpoint address (HTTP), must NOT include 'http://xxx' or 'tcp://xxx' */
+const char* address = "192.168.1.131/sensor_data";  /* Endpoint address (HTTP), must NOT include 'http://xxx' or 'tcp://xxx' */
 int port = 8080;
 
 /* Enable Sensors */

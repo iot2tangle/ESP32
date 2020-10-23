@@ -3,27 +3,19 @@
 #include <stdbool.h>
 #include "struct-device.h"
 #include "config.h"
+#include "devices.h"
 
-#ifdef RASPI
-	#include "raspi3-4/raspi3-4-headers.h"
-#endif
-#ifdef MYDEVICE
-	#include "my-device/my-device-headers.h"
-#endif
-#ifdef ESP32
-	#include "ESP32/ESP32-headers.h"
-#endif
 
 void config(struct device *z)
 {   
     /* User assignments */
     z->id = id_name;
         
-    z->ep = endpoint;
-    z->ep_port = port;
+    z->addr = address;
+    z->addr_port = port;
 
     #ifdef MQTT
-    	    z->user_mqtt = user;
+    	z->user_mqtt = user;
 	    z->pass_mqtt = password;
 	    z->top = topic;
     #endif
@@ -72,7 +64,10 @@ void initPeripherals(long* c)
     #endif
 	
     init_LEDs();
-
+    init_i2c();
+    init_SPI();
+	
+	init_internal(true);
     init_bme280(true);
     init_mpu6050(true);
     init_bh1750(true);
@@ -103,7 +98,7 @@ void connectNetwork(struct device *z)
 	}
 	#endif
 
-	if ( !isEndpointOk(z->ep, z->ep_port, z->user_mqtt, z->pass_mqtt) )     /* Check Endpoint */
+	if ( !isEndpointOk(z->addr, z->addr_port, z->user_mqtt, z->pass_mqtt) )     /* Check Endpoint */
 	{	
 		udelay_basics ( 100000 );
 		led_blinks(1, 3, 70000);	// Blink in green RED - ERROR 1 (Bad connection with the endpoint);
@@ -131,7 +126,7 @@ void getData(struct device *z, long *c)
 
 	
     /* GET DATA INTERNAL TEMPERATURE */
-    strcpy(z->d[0], get_internal_temp());
+    strcpy(z->d[0], get_internal());
 	
     /* GET DATA BME280 */
     if (check_bme280())
@@ -312,7 +307,7 @@ void generateJson(struct device *z)
 
 bool sendtoEndpoint(struct device *z)
 {
-    bool b_socket = socket_sender(z->ep, z->ep_port, "s", "sd", "ssdf", z->json, z->interv);
+    bool b_socket = socket_sender(z->addr, z->addr_port, z->top, z->user_mqtt, z->pass_mqtt, z->json, z->interv);
     if (b_socket)
 		led_blinks(0, 2, 60000);	// Blink in green LED;
     else
