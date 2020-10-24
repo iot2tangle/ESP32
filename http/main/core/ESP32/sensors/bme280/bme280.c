@@ -10,6 +10,7 @@
 #include "sdkconfig.h"
 #include "bme280.h"
 
+
 int fd_bme;
 bme280_calib_data cal;
 bme280_raw_data raw;
@@ -181,7 +182,7 @@ bool slave_write_byte_bme280(uint8_t reg_addr, uint8_t data) {
     i2c_master_write_byte(cmd, reg_addr, ACK_CHECK_EN);
     i2c_master_write_byte(cmd, data, ACK_CHECK_EN);
     i2c_master_stop(cmd);
-    int ret = i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, 100 / portTICK_RATE_MS);
+    int ret = i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, TICK_DELAY);
     i2c_cmd_link_delete(cmd);
     if (ret == ESP_FAIL) {
         return false;
@@ -196,7 +197,7 @@ uint8_t slave_read_ubyte(uint8_t addr)
     i2c_master_write_byte(cmd, BME280_SENSOR_ADDR << 1, ACK_CHECK_EN);
     i2c_master_write_byte(cmd, addr, 1);
     i2c_master_stop(cmd);
-    i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, 100 / portTICK_RATE_MS);
+    i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, TICK_DELAY);
     i2c_cmd_link_delete(cmd);
 
     uint8_t buf;
@@ -205,7 +206,7 @@ uint8_t slave_read_ubyte(uint8_t addr)
     i2c_master_write_byte(cmd, BME280_SENSOR_ADDR << 1 | 1, ACK_CHECK_EN);
     i2c_master_read_byte(cmd, &buf, 1);
     i2c_master_stop(cmd);
-    i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, 100 / portTICK_RATE_MS);
+    i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, TICK_DELAY);
     i2c_cmd_link_delete(cmd);
     
     return buf;

@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define TICK_DELAY 10
+
 #define I2C_PORT_NUMBER 1
 
 #define BH1750_SENSOR_ADDR 0x23   /*!< slave address for BH1750 sensor */

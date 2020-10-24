@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define TICK_DELAY 10
+
 #define I2C_PORT_NUMBER 1
 
 #define BME280_SENSOR_ADDR  0x76	/*Device Address/Identifier */

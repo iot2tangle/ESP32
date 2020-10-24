@@ -3,6 +3,8 @@
 
 #include <stdbool.h>
 
+#define TICK_DELAY 10
+
 #define I2C_PORT_NUMBER 1
 
 #define MPU6050_SENSOR_ADDR	0x68	/*Device Address/Identifier for MPU6050*/
