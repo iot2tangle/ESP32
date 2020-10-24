@@ -103,10 +103,7 @@ int8_t slave_read_byte(uint8_t addr)
     i2c_master_write_byte(cmd, MPU6050_SENSOR_ADDR << 1 | 1, ACK_CHECK_EN);
     i2c_master_read_byte(cmd, &buf, 1);
     i2c_master_stop(cmd);
-    printf("%d\n", portTICK_RATE_MS);
-    printf("ENTRADA\n");
     i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, TICK_DELAY);
-    printf("SALIDA\n");
     i2c_cmd_link_delete(cmd);
 
     
