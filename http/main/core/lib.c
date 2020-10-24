@@ -318,6 +318,8 @@ bool sendtoEndpoint(struct device *z)
 
 void t_delay(long d, long l) 
 {  
+	if (l >= d)		/* To prevent crashes */
+		l = d;
     udelay_basics ( (d - l) * 1000000 );	/* Time set by user  minus  loss time by operation */ 
 }
 

@@ -22,7 +22,6 @@ char* s;
 bool check_bme280()
 {   
     id_bme280 = slave_read_u16(BME280_SENSOR_ADDR);
-    printf("ID: %d\n",id_bme280);
     if(id_bme280 == 0)
 		return true;
     else
