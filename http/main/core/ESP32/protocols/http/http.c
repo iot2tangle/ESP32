@@ -5,11 +5,10 @@
 #include "esp_netif.h"
 #include "esp_tls.h"
 #include "http.h"
-
 #include "esp_http_client.h"
 
 static const char *TAG = "HTTP_CLIENT";
-
+esp_http_client_handle_t client;
 
 bool socket_sender(const char* endp, int p, const char* _top, const char* _us, const char* _pass, const char* j, long t)
 {
@@ -31,75 +30,89 @@ bool socket_sender(const char* endp, int p, const char* _top, const char* _us, c
     c_aux = strtok(NULL, "\0");
     strcat(buffer, c_aux);
     u=buffer;
-    
-	
-    esp_http_client_config_t config = {
-        .url = u,
-        .event_handler = _http_event_handler,
-    };
-    esp_http_client_handle_t client = esp_http_client_init(&config);
+
     esp_err_t err; 
     
-    // POST 
-    esp_http_client_set_url(client, u);
-    esp_http_client_set_method(client, HTTP_METHOD_POST);
-    esp_http_client_set_post_field(client, j, strlen(j));
-    err = esp_http_client_perform(client);
+    // POST
+    printf("			*** ");
+    err = esp_http_client_perform(client);	/* Check connection */
+    if (err == 0)// || err == 28676)	/* err = 28676 is an error in the response of the gateway, however it indicates that there is a gateway listening. */
+	{
+		esp_http_client_set_url(client, u);
+		esp_http_client_set_method(client, HTTP_METHOD_POST);
+		esp_http_client_set_post_field(client, j, strlen(j));
+		err = esp_http_client_perform(client);
 
-	printf("			*** ");
-    if (err == 28676)
-    {
-    	printf("Data Sucessfully sent to Tangle!\n");
-	return true; 
-    }
+		if (err == 28676)
+		{
+			printf("Data Sucessfully sent to Tangle!\n");
+			return true; 
+		}
+		else
+		{
+			printf("Failed to send Data to Endpoint!\n");
+			return false;
+		}
+	}
     else
     {
-    	printf("Failed to send Data to Endpoint! -- Please, check your configuration --\n");
+    	printf("Endpoint no detected! -- Please, check your configuration --\nRebooting....");
+    	esp_restart();		/* Reboot ESP32 */
 	    return false;
 	}
+	esp_http_client_close(client);
     esp_http_client_cleanup(client);
 }
 
-bool isEndpointOk(const char* endp, int p, const char* _us, const char* _pass)
+bool init_socket(const char* endp, int p, const char* _us, const char* _pass, bool ft_http)
 {
-	    // URL adaptation
-    char* p_s = " ";
-    char p_buff[8];
-    sprintf(p_buff, ":%d/", p);
-    p_s = p_buff;
-    
-    const char* u = " ";
-    char buffer[40], aux[40];
-    strcpy(aux, endp);
-    
-    char* c_aux;
-    c_aux = strtok(aux, "/");
-    strcpy(buffer, "http://");
-    strcat(buffer, c_aux);
-    strcat(buffer, p_s);
-    c_aux = strtok(NULL, "\0");
-    strcat(buffer, c_aux);
-    u=buffer;
-    esp_err_t err; 
-    
-    esp_http_client_config_t config = {
-        .url = u,
-        .event_handler = _http_event_handler,
-    };
-    esp_http_client_handle_t client = esp_http_client_init(&config);
-	err = esp_http_client_perform(client);
+    if (ft_http == true)
+    {
+		// URL adaptation
+		char* p_s = " ";
+		char p_buff[8];
+		sprintf(p_buff, ":%d/", p);
+		p_s = p_buff;
+		
+		const char* u = " ";
+		char buffer[40], aux[40];
+		strcpy(aux, endp);
+		
+		char* c_aux;
+		c_aux = strtok(aux, "/");
+		strcpy(buffer, "http://");
+		strcat(buffer, c_aux);
+		strcat(buffer, p_s);
+		c_aux = strtok(NULL, "\0");
+		strcat(buffer, c_aux);
+		u=buffer;
+		esp_err_t err; 
+		
+		esp_http_client_config_t config = {
+		    .url = u,
+		    .event_handler = _http_event_handler,
+		};
 
-    if (err == 0)
-    {
-    	printf(" -- The Configuration Network is correct, sending data to The Tangle --\n");
-	return true; 
+    	client = esp_http_client_init(&config);
+	
+		err = esp_http_client_perform(client);
+
+		if (err == 0)
+		{
+			printf(" -- The Configuration Network is correct, sending data to The Tangle --\n");
+			return true; 
+		}
+		else
+		{
+			printf(" -- Endpoint is NOT detected!! -- Please, check your configuration --\nRebooting....");
+    		esp_restart();		/* Reboot ESP32 */
+			return false;
+		}
+		esp_http_client_cleanup(client);
     }
-    else
-    {
-    	printf(" -- Endpoint is NOT detected!! -- Please, check your configuration --\n");
-	    return false;
-	}
-    esp_http_client_cleanup(client);
+    
+    /* No need to reconnect on ESP32 */
+    return true;
 }
 
 esp_err_t _http_event_handler(esp_http_client_event_t *evt)

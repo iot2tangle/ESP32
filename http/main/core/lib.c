@@ -99,8 +99,7 @@ void connectNetwork(struct device *z, bool first_t)
 		}
 	}
 	#endif
-
-	if ( !isEndpointOk(z->addr, z->addr_port, z->user_mqtt, z->pass_mqtt) )     /* Check Endpoint */
+	if ( !init_socket(z->addr, z->addr_port, z->user_mqtt, z->pass_mqtt, first_t) )     /* Check Endpoint */
 	{	
 		udelay_basics ( 100000 );
 		led_blinks(1, 3, 70000);	// Blink in green RED - ERROR 1 (Bad connection with the endpoint);
