@@ -40,7 +40,7 @@ git clone https://github.com/iot2tangle/ESP32.git
 #### 3) Edit the file config.h
 The *config.h* file must be opened and modified, this file is in the directory *'ESP32/http/main'* of the repository.
 
-This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams HTTP Gateway* running, the *Device Id*, and others configurations. The *Device Id* you define here must be between the devices you set in on the *Gateway configuration file*. 
+This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams HTTP Gateway* running, the *Device Id*, and others configurations. The *Id Name Device* you define here must be between the devices you set in on the *Gateway configuration file*. 
 ```
 const char* id_name = "ESP32-HTTP";
 
@@ -61,14 +61,14 @@ bool isEnable_Humidity = true;
 /* Interval of time */
 long interval = 30;    /* Time in seconds between */
 ```
-#### 5) Open ESP-IDF Toolchain and go to the repository directory
+#### 4) Open ESP-IDF Toolchain and set position in the repository directory
 Open the newly installed program ***ESP-IDF Command Prompt***
 
 Using *Command Prompt* navigation, you must set position in ***'http'*** folder:
 ```
 cd ESP32/http
 ```
-#### 6) Compile and Download the Firmware:
+#### 5) Compile and Download the Firmware:
 Once you make sure you are at the root of the *http* folder run the following command:
 ```
 idf.py build
@@ -79,18 +79,115 @@ Now make sure you have ESP32 connected to your computer, and know what COM port 
 
 Then run the following command that will start flashing the firmware. (You will probably have to press the reset button on your ESP32 development board, even several times for it to recognize the board.)
 ```
-idf.py -p (PORT) flash'
+idf.py -p COM1 flash				# COM1 is an example, you must put your port
 ```
-If the *I2T Streams HTTP Gateway* is configured correctly (we will explain this next), ***you will be sending data to Tangle via Streams***. 
+Upon completion, the firmware is downloaded to your ESP32. If the *I2T Streams HTTP Gateway* is configured correctly (we will explain this next), ***you will be sending data to Tangle via Streams***.
 
-The following capture shows a *Raspberry Pi* with a *BME280* connected (note how the sensor is detected automatically):
+
+
+
+
+### Linux and macOS:
+#### 1) Install ESP-IDF SDK:
+Prerequisites of ESP-IDF SDK:
+```
+sudo apt update
+sudo apt install git wget flex bison gperf python python-pip python-setuptools cmake ninja-build ccache libffi-dev libssl-dev
+```
+It is recommended to install the stable version: ESP-IDF v4.1, you can download it from here:
+```
+git clone -b v4.1 --recursive https://github.com/espressif/esp-idf.git
+```
+Now install the SDK, this may take a while:
+```
+cd ~/esp-idf
+./install.sh
+. ./export.sh
+```
+After doing this last step do not close the shell, as we will compile and flash from here. If you close the shell you will have to do the previous step again.
+
+#### 2) Download the Iot2Tangle ESP32 Repository:
+You can download the repository directly from Github, or from Command Prompt with the following command:
+```
+git clone https://github.com/iot2tangle/ESP32.git
+```
+#### 3) Edit the file config.h
+The *config.h* file must be opened and modified, this file is in the directory *'ESP32/http/main'* of the repository.
+
+This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams HTTP Gateway* running, the *Device Id*, and others configurations. The *Id Name Device* you define here must be between the devices you set in on the *Gateway configuration file*. 
+```
+const char* id_name = "ESP32-HTTP";
+
+/* Network Configuration */
+const char* ssid_WiFi = "mySSID";
+const char* pass_WiFi = "myPASS";
+
+/* HTTP Endpoint Configuration */
+const char* address = "192.168.1.131/sensor_data";    /* Endpoint address (HTTP), must NOT include 'http://xxx' or 'tcp://xxx' */
+int port = 8080;
+
+/* Enable Sensors */
+bool isEnable_TemperatureIntern = true;
+bool isEnable_TemperatureExtern = true;	   /* true: Enable  --  false: Disable */
+bool isEnable_Humidity = true;
+...
+
+/* Interval of time */
+long interval = 30;    /* Time in seconds between */
+```
+#### 4) Open ESP-IDF Toolchain and set position in the repository directory
+Continue with the shell that you had open after installation, you must set position in ***'http'*** folder:
+```
+cd ~/ESP32/http
+```
+#### 4) Compile and Download the Firmware:
+Once you make sure you are at the root of the *http* folder run the following command:
+```
+idf.py build
+```
+If the compilation was correct it should read: *Project build complete*.
+
+Now make sure you have ESP32 connected to your computer, then run the following command that will start flashing the firmware. (You will probably have to press the reset button on your ESP32 development board, even several times for it to recognize the board.)
+```
+idf.py -p /dev/ttyUSB0 flash				# /dev/ttyUSB0 is an example, you must put your port. In macOS: '/dev/cu' 
+```
+Upon completion, the firmware is downloaded to your ESP32. If the *I2T Streams HTTP Gateway* is configured correctly (we will explain this next), ***you will be sending data to Tangle via Streams***. 
+
+
+
+## Debugging
+If configured correctly, *ESP32* should be sending data to the gateway. However, you may want to verify that it is running on *ESP32*.
+
+The code continuously sends information out the **serial port**, so it can read the serial port to see what is happening and detect errors.
+
+You can use the 'Arduino Serial Monitor' for this, but we recommend using the following software:
+### Windows:
+Open *Command Prompt*.
+
+Configure the Baud Rate of the port to 115200 bps:
+```
+sudo apt install cu
+```
+Read the serial port:
+```
+cu -l /dev/ttyUSB0 -s 115200
+```
+### Linux and macOS:
+Install *cu Monitor*. It is an excellent shell monitor and very useful.
+```
+sudo apt install cu
+```
+Run *cu Monitor*:
+```
+cu -l /dev/ttyUSB0 -s 115200
+```
+
+
+The following screenshot is a reading of the Serial Port, you should see something like this:
 
 ![Raspberry with BME280 sending data to the Tangle](https://i.postimg.cc/cH6TWpXP/Screenshot-from-2020-10-16-11-33-05.png)
 
-Here we can see the result when all the sensors have been connected:
 
-![Raspberry with all sensors sending data to the Tangle](https://i.postimg.cc/XvsxTjcw/Screenshot-from-2020-10-16-11-34-46.png)
-	
 # Setting up the Streams HTTP Gateway
 
 ## Preparation
@@ -104,10 +201,8 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 Make sure you also have the build dependencies installed, if not run:  
 
 ```
-sudo apt install build-essential  
-sudo apt install pkg-config  
-sudo apt install libssl-dev  
 sudo apt update
+sudo apt install build-essential pkg-config libssl-dev  
 ```
 
 ## Installing the Streams Gateway
