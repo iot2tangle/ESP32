@@ -10,12 +10,12 @@
 
 #define I2C_PORT_NUMBER 1
 
-#define I2C_MASTER_SCL_IO 22               /*!< gpio number for I2C master clock */
-#define I2C_MASTER_SDA_IO 21               /*!< gpio number for I2C master data  */
-#define I2C_MASTER_NUM I2C_NUMBER(1) /*!< I2C port number for master dev */
-#define I2C_MASTER_FREQ_HZ 100000        /*!< I2C master clock frequency */
-#define I2C_MASTER_TX_BUF_DISABLE 0                           /*!< I2C master doesn't need buffer */
-#define I2C_MASTER_RX_BUF_DISABLE 0                           /*!< I2C master doesn't need buffer */
+#define I2C_MASTER_SCL_IO 32              			/*!< gpio number for I2C master clock */
+#define I2C_MASTER_SDA_IO 33               			/*!< gpio number for I2C master data  */
+#define I2C_MASTER_NUM I2C_NUMBER(1) 				/*!< I2C port number for master dev */
+#define I2C_MASTER_FREQ_HZ 100000        			/*!< I2C master clock frequency */
+#define I2C_MASTER_TX_BUF_DISABLE 0                 /*!< I2C master doesn't need buffer */
+#define I2C_MASTER_RX_BUF_DISABLE 0                 /*!< I2C master doesn't need buffer */
 
 i2c_port_t i2c_master_port = I2C_PORT_NUMBER;
 

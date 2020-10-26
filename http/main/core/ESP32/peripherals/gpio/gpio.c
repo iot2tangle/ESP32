@@ -8,7 +8,7 @@
 #include "driver/gpio.h"
 
 #define GREEN_LED 2
-#define RED_LED 0
+#define RED_LED 15
 
 
 void init_LEDs()

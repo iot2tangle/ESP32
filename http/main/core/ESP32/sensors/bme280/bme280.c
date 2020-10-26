@@ -10,6 +10,7 @@
 #include "sdkconfig.h"
 #include "bme280.h"
 
+// BME280 not working well in this version yet
 
 int fd_bme;
 bme280_calib_data cal;
@@ -22,10 +23,10 @@ char* s;
 
 bool check_bme280()
 {   
-    id_bme280 = slave_read_u16(BME280_SENSOR_ADDR);
+   /* id_bme280 = slave_read_u16(BME280_SENSOR_ADDR);
     if(id_bme280 == 0)
 		return true;
-    else
+    else*/
 		return false;
 }
 

@@ -7,8 +7,8 @@
 #include "freertos/FreeRTOS.h"
 #include "driver/gpio.h"
 
-#define ACOUSTIC_ENABLE 23	// GPIO
-#define ACOUSTIC_DATA 22	// GPIO
+#define ACOUSTIC_ENABLE 22	// GPIO 23
+#define ACOUSTIC_DATA 21 // GPIO 22
 
 char buffer[100];
 char* s;

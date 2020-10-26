@@ -23,7 +23,7 @@ char* s;
 
 void welcome_msg()
 {
-    printf("\n					----  My Device -- IOT2TANGLE  --");
+    printf("\n					----  ESP32 -- IOT2TANGLE  --");
     
     #ifdef HTTP	
     	printf("  HTTP  ----\n\n");	// Printf in shell
