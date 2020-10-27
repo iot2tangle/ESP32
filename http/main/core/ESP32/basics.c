@@ -69,3 +69,8 @@ long take_time_basics()
     time(&t);
     return t;
 }
+
+void restart_basic()
+{
+	esp_restart();		/* Reboot ESP32 */
+}

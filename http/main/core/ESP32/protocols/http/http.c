@@ -105,7 +105,6 @@ bool init_socket(const char* endp, int p, const char* _us, const char* _pass, bo
 		else
 		{
 			printf(" -- Endpoint is NOT detected!! -- Please, check your configuration --\nRebooting....");
-    		esp_restart();		/* Reboot ESP32 */
 			return false;
 		}
 		esp_http_client_cleanup(client);
