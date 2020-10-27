@@ -1,23 +1,25 @@
 # ESP32 with I2T Sensors Stack  --  HTTP Protocol
 
-ESP32 is a .............
+ESP32 is one of the microcontrollers for *IoT applications* par excellence. It is widely used for both educational and industrial development due to its great versatility, reliability and low cost. At *I2T* we wanted to add it due to its extensive use in the development community.
 
 ## Setting up your ESP32 with the I2T Sensors Stack
 
 This is the list of Sensors/Modules that you can connect and it will be recognized immediately.
-- ***BME280*** (*Bosch*) - Temperature, Humidity and Pressure sensor. -> Connected by *I2C Bus* via: *GPIO2/SDA* and *GPIO3/SCL* --- Be careful with the supply of this sensor, the BM280 is powered with 3.3V, if your module does not have a voltage regulator (some modules do not have it) the sensor can be damaged if you supply 5V.
-- ***MPU6050*** (*InvenSense-TDK*) - Acelerometer and Gyroscope 6-axis. -> Connected by *I2C Bus* via: *GPIO8/SDA* and *GPIO9/SCL*.
-- ***BH1750*** (*ROHM*) - Ambient Light Sensor. -> Connected by *I2C Bus* via: *GPIO8/SDA* and *GPIO9/SCL*.
-- ***Generic Adjustable Sound Sensor with digital output*** (like *KY038 Module*) - -> Digital Signal on *GPIO24*, +5V in *GPIO23* (to enable data collection).
-- Also, you can connect a ***Green LED*** in *GPIO17* that blink when the data is sent to the Tangle, and a ***Red LED*** in *GPIO27* that will Blink in a certain way when it detects certain errors (totally optional)
+- ***BME280*** (*Bosch*) - Temperature, Humidity and Pressure sensor. -> Connected by *I2C Bus* via: *GPIO33/SDA* and *GPIO32/SCL* --- Be careful with the supply of this sensor, the BM280 is powered with 3.3V, if your module does not have a voltage regulator (some modules do not have it) the sensor can be damaged if you supply 5V.
+- ***MPU6050*** (*InvenSense-TDK*) - Acelerometer and Gyroscope 6-axis. -> Connected by *I2C Bus* via: *GPIO33/SDA* and *GPIO32/SCL*.
+- ***BH1750*** (*ROHM*) - Ambient Light Sensor. -> Connected by *I2C Bus* via: *GPIO33/SDA* and *GPIO32/SCL*.
+- ***Generic Adjustable Sound Sensor with digital output*** (like *KY038 Module*) - -> Digital Signal on *GPIO21*, *GPIO22* to GND (to enable sound data collection).
+- Also, you can connect a ***Green LED*** in *GPIO2* that blink when the data is sent to the Tangle, and a ***Red LED*** in *GPIO15* that will Blink in a certain way when it detects certain errors (totally optional)
 
 ### Connecting the sensors
 
-The following diagram explains how each sensor of our stack must be connected to the Raspberry pins:
+The following diagram explains how each sensor of our stack must be connected to the ESP32 pins. The "NodeMCU-32s" development board has been used in this diagram, which contains the ESP32 microcontroller. However, any development board that contains the ESP32 microcontroller can be used.
 
-![I2T Sensors Stack on Raspberry](https://iot2tangle.io/assets/screenshots/Hardware_connections_Raspi-01.png)
+![I2T Sensors Stack on ESP32](https://iot2tangle.io/assets/screenshots/ESP32-I2T.png)
 
-**It is not necessary to have all the sensors listed here**, the code is able to detect which sensors were connected. In the case of not connecting any sensor, the only real data that will be displayed on the Tangle will be the Internal Temperature of *Raspberri Pi*.
+**It is not necessary to have all the sensors listed here**, the code is able to detect which sensors were connected. In the case of not connecting any sensor, the only real data that will be displayed on the Tangle will be the Internal Temperature of *ESP32*.
+
+***IMPORTANT NOTE:*** *Espressif has deprecated the ESP32's internal temperature sensor a few years ago, as it has proven not to be a very accurate measurement. However we will use it as a minimum unit of information to be able to send data to the Tangle without having sensors connected. Please keep this in mind, so this value should not be taken into account for critical applications.*
 
 ## Download Firmware on ESP32
 This repository uses the ***Iot2Tangle C Core devices*** adapted for ***ESP32-FreeRTOS*** offered in the official *Espressif Toolchain ESP-IDF SDK*. Once the SDK is installed you will have all the tools to compile and download the program on your ESP32.
@@ -166,11 +168,11 @@ Open *Command Prompt*.
 
 Configure the Baud Rate of the port to 115200 bps:
 ```
-sudo apt install cu
+mode COM1: baud=115200
 ```
 Read the serial port:
 ```
-cu -l /dev/ttyUSB0 -s 115200
+copy COM1: con:
 ```
 ### Linux and macOS:
 Install *cu Monitor*. It is an excellent shell monitor and very useful.
@@ -183,7 +185,7 @@ cu -l /dev/ttyUSB0 -s 115200
 ```
 
 
-The following screenshot is a reading of the Serial Port, you should see something like this:
+The following screenshot is a reading of the *Serial Port*, you should see something like this:
 
 ![Raspberry with BME280 sending data to the Tangle](https://i.postimg.cc/cH6TWpXP/Screenshot-from-2020-10-16-11-33-05.png)
 
@@ -224,7 +226,6 @@ Run the Streams Gateway:
 ```
 cargo run --release  
 ```
-
 This will compile and start the *Streams HTTP Gateway*. Note that the compilation process may take from 3 to 25 minutes (Pi3 took us around 15/25 mins, Pi4 8 mins and VPS or desktop machines will generally compile under the 5 mins) depending on the device you are using as host.
 You will only go through the compilation process once and any restart done later will take a few seconds to have the Gateway working.
 
@@ -235,7 +236,7 @@ Once started, the ***Channel Id*** will be displayed, and the gateway will be op
 
 ### Reading messages from the Tangle
 
-You can read the received messages directly from the "I2T Explorer": https://explorer.iot2tangle.io/ using the Channel Id printed by the Gateway in shell.   
+You can read the received messages directly from the **I2T Explorer**: https://explorer.iot2tangle.io/ using the Channel Id printed by the Gateway in shell.   
 
 ![I2T Explorer](https://i.postimg.cc/wTNf7dgp/Screenshot-from-2020-10-16-11-46-16.png)
 
