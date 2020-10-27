@@ -72,7 +72,7 @@ bool connectAttempt(const char* ssid, const char* pass)
 
 
 // Wifi event handler
-static esp_err_t event_handler(void *ctx, system_event_t *event)
+esp_err_t event_handler(void *ctx, system_event_t *event)
 {
     switch(event->event_id) {
 		

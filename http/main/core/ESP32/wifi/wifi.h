@@ -4,7 +4,7 @@
 
 #include "esp_wifi.h"
 
-static esp_err_t event_handler(void *ctx, system_event_t *event);
+esp_err_t event_handler(void *ctx, system_event_t *event);
 bool connectAttempt(const char*,const char*);
 
 #endif
