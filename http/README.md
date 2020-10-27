@@ -109,7 +109,6 @@ cd ~/esp-idf
 After doing this last step do not close the shell, as we will compile and flash from here. If you close the shell you will have to do the previous step again.
 
 #### 2) Download the Iot2Tangle ESP32 Repository:
-You can download the repository directly from Github, or from Command Prompt with the following command:
 ```
 git clone https://github.com/iot2tangle/ESP32.git
 ```
@@ -158,7 +157,7 @@ Upon completion, the firmware is downloaded to your ESP32. If the *I2T Streams H
 
 
 ## Debugging
-If configured correctly, *ESP32* should be sending data to the gateway. However, you may want to verify that it is running on *ESP32*.
+If configured correctly, *ESP32* should be sending data to the gateway automatically. However, you may want to verify that it is running on *ESP32*.
 
 The code continuously sends information out the **serial port**, so it can read the serial port to see what is happening and detect errors.
 
