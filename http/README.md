@@ -85,8 +85,10 @@ idf.py -p COM1 flash				# COM1 is an example, you must put your port
 ```
 Upon completion, the firmware is downloaded to your ESP32. If the *I2T Streams HTTP Gateway* is configured correctly (we will explain this next), ***you will be sending data to Tangle via Streams***.
 
-
-
+You can watch the execution of the Binary by monitoring the COM port used
+```
+idf.py monitor serial COM1				# COM1 is an example, you must put your port
+```
 
 
 ### Linux and macOS:
