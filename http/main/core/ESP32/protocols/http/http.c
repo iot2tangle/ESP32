@@ -33,35 +33,42 @@ bool socket_sender(const char* endp, int p, const char* _top, const char* _us, c
 
     esp_err_t err; 
     
-    // POST
-    printf("			*** ");
-    err = esp_http_client_perform(client);	/* Check connection */
-    if (err == 0)// || err == 28676)	/* err = 28676 is an error in the response of the gateway, however it indicates that there is a gateway listening. */
+    // POST	
+	esp_http_client_config_t config = {
+	    .url = u,
+	    .event_handler = _http_event_handler,
+	};
+
+    client = esp_http_client_init(&config);
+
+	err = esp_http_client_perform(client);	// Check HTTP Endpoint		
+    if (err == ESP_OK)
 	{
 		esp_http_client_set_url(client, u);
 		esp_http_client_set_method(client, HTTP_METHOD_POST);
+		esp_http_client_set_header(client, "Content-Type", "application/json");
 		esp_http_client_set_post_field(client, j, strlen(j));
 		err = esp_http_client_perform(client);
 
 		if (err == 28676)
 		{
-			printf("Data Sucessfully sent to Tangle!\n");
+			ESP_LOGI(TAG, "Data Sucessfully sent to Tangle!");
+			esp_http_client_cleanup(client);
 			return true; 
 		}
 		else
 		{
-			printf("Failed to send Data to Endpoint!\n");
+			ESP_LOGE(TAG,"Failed to send Data to Endpoint!");
+			esp_http_client_cleanup(client);
 			return false;
 		}
 	}
     else
     {
-    	printf("Endpoint no detected! -- Please, check your configuration --\nRebooting....");
-    	esp_restart();		/* Reboot ESP32 */
+    	ESP_LOGE(TAG,"Endpoint no detected! -- Please, check your configuration --");
+    	esp_http_client_cleanup(client);
 	    return false;
 	}
-	esp_http_client_close(client);
-    esp_http_client_cleanup(client);
 }
 
 bool init_socket(const char* endp, int p, const char* _us, const char* _pass, bool ft_http)
