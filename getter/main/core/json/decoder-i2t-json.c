@@ -18,12 +18,19 @@ bool recover_json(char* js, struct json *j)
   	jsmn_parse(&p, js, strlen(js), tokens, 128);  
 	jsmntok_t *token;
 	i = 0;
-	m = 0;
+
 	token = tokens + i;
 	
 	///// Start to parse /////
 	// IOT2TANGLE HEADER
 	while (token->type != JSMN_STRING) { token = tokens + ++i; }	// search the next string in the json
+	// useless "message" string
+	
+	// Falta recuperar numero ID
+	
+	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
+	// useless "message" string
+	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	
 	sprintf(j->credential, recover_str(js, token->start, token->end));		//"iot2tangle" header string
 	if ( strcmp(j->credential, "iot2tangle") != 0 )
@@ -31,11 +38,14 @@ bool recover_json(char* js, struct json *j)
 	
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	
+	m = 0;
 	// SENSORS
 	while ( strcmp(recover_str(js, token->start, token->end), "sensor") == 0 )
 	{
 		k = 0;
 		
+		j->sensor[m].isEnable = true;		// Enable this Sensor index
+				
 		do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 					
 		sprintf(j->sensor[m].id, recover_str(js, token->start, token->end));	// id sensor string
@@ -60,6 +70,8 @@ bool recover_json(char* js, struct json *j)
 			
 			k++;		
 		}
+		j->sensor[m].num_values = k;		// Save the numbers of Sensor Values
+  		
   		m++;
   	}
 	
@@ -70,15 +82,17 @@ bool recover_json(char* js, struct json *j)
   	
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	// useless "timestamp" string
+	//do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
+	
+	//j->timestamp = atoi(recover_str(js, token->start, token->end));	// Timestamp string
+	
+	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
+	// useless "channel" string
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	
-	j->timestamp = atoi(recover_str(js, token->start, token->end));	// Timestamp string
+	sprintf(j->channel, recover_str(js, token->start, token->end));
 	
-	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
-	// useless "relative_timestamp" string
-	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
-	
-	j->relative_timestamp = atoi(recover_str(js, token->start, token->end));	// Timestamp string
+	for (int z = m; z < MAX_SENSORS; z++) j->sensor[z].isEnable = false;	// Disable the rest of the sensors
 
    	return true;
 }

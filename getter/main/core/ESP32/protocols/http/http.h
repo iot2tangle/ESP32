@@ -8,9 +8,9 @@
 
 #include "esp_http_client.h"
 
+bool get_json(char* js, const char*, int, const char*, const char*, const char*, long);
 esp_err_t _http_event_handler(esp_http_client_event_t*);
 bool init_socket(const char*, int, const char*, const char*, bool);
-bool socket_sender(const char*, int, const char*, const char*, const char*, const char*, long);
 
 #endif
 

@@ -12,16 +12,20 @@ struct s_sensor
 	char id[32];
 	char name[32][MAX_VALUE];
 	char value[32][MAX_VALUE];
+	int num_values;
+	bool isEnable;
 };
 
 struct json
 {
+	int id_keepy;
    	char credential[32];
 
 	struct s_sensor sensor[MAX_SENSORS];
 
    	char id[32];
 	long timestamp, relative_timestamp;
+	char channel[110];
 }; 
 
 #endif

@@ -18,7 +18,7 @@ struct device {
    const char *ssid_wifi;
    const char *pass_wifi;
    
-   bool isEnable_relay[3];
+   bool isEnable_relay[4];
 
    long interv; 
    
