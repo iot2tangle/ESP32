@@ -114,7 +114,7 @@ bool init_socket(const char* endp, int p, const char* _us, const char* _pass, bo
 		}
 		else
 		{
-			printf(" -- Endpoint is NOT detected!! -- Please, check your configuration --\nRebooting....");
+			printf(" -- Endpoint is NOT detected!! -- Please, check your configuration --\n");
 			esp_http_client_cleanup(client);
 			return false;
 		}

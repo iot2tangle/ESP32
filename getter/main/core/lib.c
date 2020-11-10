@@ -21,7 +21,7 @@ void action(struct json *j)
 		*							*
 		*****************************/
 
-		printf("\nACTIONS:	(Relay 1, 2, 3 and 4 Available)\n");
+		printf("\nACTIONS:	-- Relay 1 (GPIO26), 2 (GPIO27), 3 (GPIO14) and 4 (GPIO12) Available --\n");
 		printf("\n  ********************************************\n"
 			     "  *   You must place your own actions here   *\n"
 			     "  ********************************************\n");
@@ -42,69 +42,86 @@ void action(struct json *j)
 		//																											//
 		/************************************************************************************************************/
 		
+		// Send this command in shell to be able to simulate the examples:
+		// curl --location --request POST 'YOUR_KEEPY_HOST:3002/messages' --header 'Content-Type: application/json' --data-raw '{"iot2tangle":[{"sensor":"Internal","data":[{"InternalTemperature":"47.24"}]},{"sensor":"Environmental","data":[{"Temperature":"50.0"},{"Humidity":"34.2"},{"Pressure":"998.20"}]},{"sensor":"Acoustic","data":[{"SoundLevel":"High"}]},{"sensor":"Light","data":[{"Light":"0"}]},{"sensor":"Accelerometer","data":[{"X":"3.98"},{"Y":"0.06"},{"Z":"9.20"}]},{"sensor":"Gyroscope","data":[{"X":"0.40"},{"Y":"-0.43"},{"Z":"-0.05"}]}],"device": "DEVICE_ID_1","timestamp": "1601653408"}'
+		
+		
 		/********** EXAMPLES ****************************************************************************************/
 		printf("\nACTIONS EXAMPLES:\n");
+		
 		/* TEMPERATURE SENSOR EXAMPLE */
 		// Suppose that the value of environment temperature is in the variable j->sensor[1].value[0]
-		float temperature = atof(j->sensor[1].value[0]);
-		
-		printf("Temperature Sensor Example       -> ");
-		if (temperature > 35.0)			// If temperature is greater than 35 Celsius degrees, Turn on Refrigeration Equipment
+		if (j->sensor[1].isEnable == true)
 		{
-			set_relay_GPIO(0, 1);  // Put in HIGH RELAY 1
-			printf("High Temperature detected: Turning ON the Refrigeration Equipment\n\n");
-		}
-		else if (temperature < 30.0)	// If temperature is lower than 30 Celsius degrees, Turn off Refrigeration Equipment
-		{
-			set_relay_GPIO(0, 0);  // Put in LOW RELAY 1
-			printf("Low Temperature: Refrigeration Equipment OFF\n\n");
+			float temperature = atof(j->sensor[1].value[0]);
+			
+			printf("Temperature Sensor Example       -> ");
+			if (temperature > 35.0)			// If temperature is greater than 35 Celsius degrees, Turn on Refrigeration Equipment
+			{
+				set_relay_GPIO(0, 1);  // Put in HIGH RELAY 1
+				printf("High Temperature detected: Turning ON the Refrigeration Equipment\n\n");
+			}
+			else if (temperature < 30.0)	// If temperature is lower than 30 Celsius degrees, Turn off Refrigeration Equipment
+			{
+				set_relay_GPIO(0, 0);  // Put in LOW RELAY 1
+				printf("Low Temperature: Refrigeration Equipment OFF\n\n");
+			}
 		}
 		
 		/* HUMIDITY SENSOR EXAMPLE */
 		// Suppose that the value of environment humidity is in the variable j->sensor[1].value[1]
-		float humidity = atof(j->sensor[1].value[1]);
-		
-		printf("Humidity Sensor Example       -> ");
-		if (humidity < 40.0)			// If humidity of the soil is lower than 40%, Turn on Irrigation Equipment
+		if (j->sensor[1].isEnable == true)
 		{
-			set_relay_GPIO(1, 1);  // Put in HIGH RELAY 2
-			printf("Low Humidity in the soil detected: Turning ON the Irrigation System\n\n");
-		}
-		else if (humidity > 60.0)	// If humidity of the soil is higher than 60%, Turn off Irrigation Equipment
-		{
-			set_relay_GPIO(1, 0);  // Put in LOW RELAY 2
-			printf("Good Humidity in the soil: Irrigation System OFF\n\n");
+			float humidity = atof(j->sensor[1].value[1]);
+			
+			printf("Humidity Sensor Example       -> ");
+			if (humidity < 40.0)			// If humidity of the soil is lower than 40%, Turn on Irrigation Equipment
+			{
+				set_relay_GPIO(1, 1);  // Put in HIGH RELAY 2
+				printf("Low Humidity in the soil detected: Turning ON the Irrigation System\n\n");
+			}
+			else if (humidity > 60.0)	// If humidity of the soil is higher than 60%, Turn off Irrigation Equipment
+			{
+				set_relay_GPIO(1, 0);  // Put in LOW RELAY 2
+				printf("Good Humidity in the soil: Irrigation System OFF\n\n");
+			}
 		}
 
 		/* ACCELERATION SENSOR EXAMPLE */
 		// Suppose that this sensor is install in my car to detect when I leave my work, so that my home coffeemaker starts making my coffee
 		// the value of Acceleration in X is in the variable j->sensor[5].value[0]
-		float x_accel = atof(j->sensor[4].value[0]);
-		int time_now = 1613;		//	Actual day hour: 16:13 hs
-		if (x_accel > 2.3 && time_now > 1600)	// If acceleration in X is greater than 2.3 m/s2 (the car is running) and the actual time is greater than 16:00hs (my time off from work), Turn on my home coffeemaker
+		if (j->sensor[4].isEnable == true)
 		{
-			set_relay_GPIO(2, 1);  // Put in HIGH RELAY 3
-			printf("Acceleration in X Sensor Example       -> Car Movement detected: Turning ON home Coffeemaker\n\n");
+			float x_accel = atof(j->sensor[4].value[0]);
+			int time_now = 1613;		//	Actual day hour: 16:13 hs
+			if (x_accel > 2.3 && time_now > 1600)	// If acceleration in X is greater than 2.3 m/s2 (the car is running) and the actual time is greater than 16:00hs (my time off from work), Turn on my home coffeemaker
+			{
+				set_relay_GPIO(2, 1);  // Put in HIGH RELAY 3
+				printf("Acceleration in X Sensor Example       -> Car Movement detected: Turning ON home Coffeemaker\n\n");
+			}
 		}
 
 		/* Acoustic SENSOR EXAMPLE */
 		// Suppose that on sound/acoustic level sensor is install in one conference room, and we want to detect when there are many people to have the emergency services ready in case something happens. We will previously set a sound level that indicates that there are many people in the room.
 		// the value of environment sound level is in the variable j->sensor[2].value[0]
-		if (strcmp(j->sensor[2].value[0],"High") == 0)
+		if (j->sensor[2].isEnable == true)
 		{
-			printf("Acoustic Level Sensor Example       -> Acoustic Level exceeded: Activating Security Protocols\n\n");
-			// Blinks 2 times
-			set_relay_GPIO(3, 1);  // Put in HIGH RELAY 4
-			udelay_basics ( 800000 );
-			set_relay_GPIO(3, 0);  // Put in LOW RELAY 4
-			udelay_basics ( 800000 );
-			set_relay_GPIO(3, 1);  // Put in HIGH RELAY 4
-			udelay_basics ( 800000 );
-			set_relay_GPIO(3, 0);  // Put in LOW RELAY 4
+			if (strcmp(j->sensor[2].value[0],"High") == 0)
+			{
+				printf("Acoustic Level Sensor Example       -> Acoustic Level exceeded: Activating Security Protocols\n\n");
+				// Blinks 2 times
+				set_relay_GPIO(3, 1);  // Put in HIGH RELAY 4
+				udelay_basics ( 800000 );
+				set_relay_GPIO(3, 0);  // Put in LOW RELAY 4
+				udelay_basics ( 800000 );
+				set_relay_GPIO(3, 1);  // Put in HIGH RELAY 4
+				udelay_basics ( 800000 );
+				set_relay_GPIO(3, 0);  // Put in LOW RELAY 4
+			}
 		}
 
-udelay_basics ( 2500000 );
-printf("Finished\n");
+		udelay_basics ( 2500000 );
+		printf("Finished\n");
 
 		#endif
 	
@@ -193,12 +210,15 @@ bool get_data_tangle(char* js, struct device *z, long* c)
 	
 	bool b_socket = get_json(js, z->addr, z->addr_port, z->top, z->user_mqtt, z->pass_mqtt, z->interv);
     if (b_socket)
+    {
 		led_blinks(0, 2, 60000);	// Blink in green LED;
+    	print_json(js);
+    }
     else
 		led_blinks(1, 3, 70000);	// Blink in green RED - ERROR 1 (Bad connection with the endpoint);
-	print_json(js);
+
 	
-    return true;
+    return b_socket;
 }
 
 
@@ -225,6 +245,21 @@ void decode_json(char* js, struct json *j)
 	}
 	else
 		printf ("\nThe Json is not I2T format, please use the -Json Iot2Tangle format- to decode\n");
+}
+
+void clear_data(struct json *j)
+{
+	for (int i = 0; i < MAX_SENSORS; i++) 
+	{
+		j->sensor[i].isEnable = false;
+		sprintf(j->sensor[i].id, " ");
+		j->sensor[i].num_values = 0;
+		for (int k = 0; k < MAX_VALUE; k++) 
+		{
+			sprintf(j->sensor[i].name[k], " ");
+			sprintf(j->sensor[i].value[k], " ");
+		}
+	}		
 }
 
 void t_delay(long d, long l) 

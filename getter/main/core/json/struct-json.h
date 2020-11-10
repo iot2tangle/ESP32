@@ -9,11 +9,11 @@
 
 struct s_sensor
 {
+	bool isEnable;
 	char id[32];
 	char name[32][MAX_VALUE];
 	char value[32][MAX_VALUE];
 	int num_values;
-	bool isEnable;
 };
 
 struct json

@@ -25,16 +25,15 @@ int main ()
     	char* js = malloc(JSON_SIZE_MAX + 1);
 	    init_t = take_time();
 	
-		if ( !get_data_tangle(js, &dev, &count) )	/* Get data json from Tangle */
+		if ( !get_data_tangle(js, &dev, &count) )	/* Get data Json from Tangle */
 			connectNetwork(&dev, false);	/* Only enters it detects a network error */	
-	
-//		#ifdef EXAMPLE
-//		strcpy(js,"{\"iot2tangle\":[{\"sensor\":\"Internal\",\"data\":[{\"InternalTemperature\":\"47.24\"}]},{\"sensor\":\"Environmental\",\"data\":[{\"Temperature\":\"37.5\"},{\"Humidity\":\"41.21\"},{\"Pressure\":\"998.20\"}]},{\"sensor\":\"Acoustic\",\"data\":[{\"SoundLevel\":\"High\"}]},{\"sensor\":\"Light\",\"data\":[{\"Light\":\"0\"}]},{\"sensor\":\"Accelerometer\",\"data\":[{\"X\":\"3.98\"},{\"Y\":\"0.06\"},{\"Z\":\"9.20\"}]},{\"sensor\":\"Gyroscope\",\"data\":[{\"X\":\"0.40\"},{\"Y\":\"-0.43\"},{\"Z\":\"-0.05\"}]}],\"device\": \"Raspi-HTTP\",\"timestamp\": \"1273\"}");
-//		#endif
+		else
+		{
+			decode_json(js, &j);	/* Decode the I2T Json */
+			action(&j);				/* Execute user actions */
+		}
 		
-		decode_json(js, &j);
-	    action(&j);
-		
+		clear_data(&j);
 		free(js);	// Free malloc js
 	    t_delay(dev.interv, take_time() - init_t);  /* compensated delay */
     }    

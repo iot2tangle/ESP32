@@ -25,14 +25,15 @@ bool recover_json(char* js, struct json *j)
 	// IOT2TANGLE HEADER
 	while (token->type != JSMN_STRING) { token = tokens + ++i; }	// search the next string in the json
 	// useless "message" string
+	do{token = tokens + ++i;} while(token->type != JSMN_PRIMITIVE);	// search the next primitive (int, float or boolean) in the json
 	
-	// Falta recuperar numero ID
+	j->id_keepy = recover_int(js, token->start, token->end);
 	
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	// useless "message" string
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	
-	sprintf(j->credential, recover_str(js, token->start, token->end));		//"iot2tangle" header string
+	sprintf(j->credential, recover_str(js, token->start, token->end));		//'iot2tangle' header string
 	if ( strcmp(j->credential, "iot2tangle") != 0 )
 		return false;
 	
@@ -48,7 +49,7 @@ bool recover_json(char* js, struct json *j)
 				
 		do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 					
-		sprintf(j->sensor[m].id, recover_str(js, token->start, token->end));	// id sensor string
+		sprintf(j->sensor[m].id, recover_str(js, token->start, token->end));	// 'id sensor' string
 					
 		do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 		// useless "data" string
@@ -60,11 +61,11 @@ bool recover_json(char* js, struct json *j)
 			if ( strcmp(aux,"sensor") == 0 || strcmp(aux,"device") == 0 )	// check if we have finished reading sensor values
 				break;
 			
-			sprintf(j->sensor[m].name[k], recover_str(js, token->start, token->end));	// name of the value string
+			sprintf(j->sensor[m].name[k], recover_str(js, token->start, token->end));	// 'name of the value' string
 
 			do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 					
-			sprintf(j->sensor[m].value[k], recover_str(js, token->start, token->end));	// value string
+			sprintf(j->sensor[m].value[k], recover_str(js, token->start, token->end));	// 'value' string
 			
 			do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 			
@@ -78,19 +79,21 @@ bool recover_json(char* js, struct json *j)
 	// DEVICE
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	
-	sprintf(j->id, recover_str(js, token->start, token->end));	 	// ID Device string
+	sprintf(j->id, recover_str(js, token->start, token->end));	 	// 'ID Device' string
   	
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
-	// useless "timestamp" string
-	//do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
+	// useless "timestamp" string	
+	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	
-	//j->timestamp = atoi(recover_str(js, token->start, token->end));	// Timestamp string
+	char s_aux[10];
+	sprintf(s_aux, recover_str(js, token->start, token->end));
+	j->timestamp = atoi(s_aux);										// 'timestamp' long int
 	
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	// useless "channel" string
 	do{token = tokens + ++i;} while(token->type != JSMN_STRING);	// search the next string in the json
 	
-	sprintf(j->channel, recover_str(js, token->start, token->end));
+	sprintf(j->channel, recover_str(js, token->start, token->end));	// 'channel' string
 	
 	for (int z = m; z < MAX_SENSORS; z++) j->sensor[z].isEnable = false;	// Disable the rest of the sensors
 
@@ -110,4 +113,17 @@ char* recover_str(const char* j, int init_char, int final_char)	// Function for 
 	s = buffer;
 	printf (" ");
 	return s;
+}
+
+int recover_int(const char* j, int init_char, int final_char)	// Function for recover string from the json
+{
+	int i, value;
+	char buffer[100];
+	for (i=0; i < final_char - init_char; i++)
+	{
+		buffer[i] = j[init_char+i];
+	}
+	buffer[i] = '\0'; // End of string
+	value = atoi(buffer);
+	return value;
 }

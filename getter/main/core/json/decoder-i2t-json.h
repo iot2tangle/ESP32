@@ -5,5 +5,6 @@
 
 bool recover_json(char*, struct json *);
 char* recover_str(const char*, int, int);
+int recover_int(const char*, int, int);
 
 #endif

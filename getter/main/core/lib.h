@@ -11,5 +11,6 @@ bool get_data_tangle(char*, struct device*, long*);
 void decode_json(char*, struct json *);
 void t_delay(long, long); 
 long take_time();
+void clear_data(struct json*);
 
 #endif
