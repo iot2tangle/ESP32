@@ -18,7 +18,7 @@ The default *ESP32 Outputs GPIOs* are:
 
 ![I2T Sensors Stack on ESP32](https://iot2tangle.io/assets/screenshots/ESP32-I2T.png)
 
-## Download Firmware on ESP32
+# Download Firmware on ESP32
 This repository uses the ***Iot2Tangle C Core receiver devices*** adapted for ***ESP32-FreeRTOS*** offered in the official *Espressif Toolchain ESP-IDF SDK*. Once the SDK is installed you will have all the tools to compile and download the program on your ESP32.
 
 Remember that for ESP32 to be taking data **you must have a Keepy instance running on some endpoint that ESP32 can reach**.
