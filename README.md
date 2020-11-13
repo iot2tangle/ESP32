@@ -18,4 +18,5 @@ This is the list of Sensors/Modules that you can connect and it will be recogniz
 - Also, you can connect a ***Green LED*** that blink when the data is sent to the Tangle, and a ***Red LED*** that will Blink in a certain way when it detects certain errors (totally optional).
 
 ## Available connectivity
-- **[HTTP](https://github.com/iot2tangle/ESP32/tree/main/http)** (ESP32 will send the sensors data through HTTP to **[I2T HTTP Gateway](https://github.com/iot2tangle/Streams-http-gateway)**)
+- **[HTTP-sender](https://github.com/iot2tangle/ESP32/tree/main/http-sender)** -- ESP32 will send the sensors data through HTTP to **[I2T HTTP Gateway](https://github.com/iot2tangle/Streams-http-gateway)** or **[Keepy](https://github.com/iot2tangle/Keepy)**
+- **[HTTP-receiver](https://github.com/iot2tangle/ESP32/tree/main/http-receiver)** -- ESP32 will receive the sensors data through HTTP from **[Keepy](https://github.com/iot2tangle/Keepy)** and performs actions based on the data received (for now it is optimized only to work with Keepy).
