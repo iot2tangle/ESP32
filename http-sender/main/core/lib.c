@@ -103,9 +103,6 @@ void connectNetwork(struct device *z, bool first_t)
 	{	
 		udelay_basics ( 100000 );
 		led_blinks(1, 3, 70000);	// Blink in green RED - ERROR 1 (Bad connection with the endpoint);
-		#ifdef MICROCONTROLLER
-			restart_basic();
-		#endif
 	}
 }
 
