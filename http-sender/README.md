@@ -2,7 +2,7 @@
 
 ESP32 is one of the microcontrollers for *IoT applications* par excellence. It is widely used for both educational and industrial development due to its great versatility, reliability and low cost. At *I2T* we wanted to add it due to its extensive use in the development community.
 
-## Setting up your ESP32 with the I2T Sensors Stack
+# Setting up your ESP32 with the I2T Sensors Stack
 
 This is the list of Sensors/Modules that you can connect and it will be recognized immediately.
 - ***BME280*** (*Bosch*) - Temperature, Humidity and Pressure sensor. -> Connected by *I2C Bus* via: *GPIO33/SDA* and *GPIO32/SCL* --- Be careful with the supply of this sensor, the BM280 is powered with 3.3V, if your module does not have a voltage regulator (some modules do not have it) the sensor can be damaged if you supply 5V.
@@ -11,7 +11,7 @@ This is the list of Sensors/Modules that you can connect and it will be recogniz
 - ***Generic Adjustable Sound Sensor with digital output*** (like *KY038 Module*) - -> Digital Signal on *GPIO21*, *GPIO22* to GND (to enable sound data collection).
 - Also, you can connect a ***Green LED*** in *GPIO2* that blink when the data is sent to the Tangle, and a ***Red LED*** in *GPIO15* that will Blink in a certain way when it detects certain errors (totally optional)
 
-### Connecting the sensors
+## Connecting the sensors
 
 The following diagram explains how each sensor of our stack must be connected to the ESP32 pins. The "NodeMCU-32s" development board has been used in this diagram, which contains the ESP32 microcontroller. However, any development board that contains the ESP32 microcontroller can be used.
 
@@ -21,11 +21,12 @@ The following diagram explains how each sensor of our stack must be connected to
 
 ***IMPORTANT NOTE:*** *Espressif has deprecated the ESP32's internal temperature sensor a few years ago, as it has proven not to be a very accurate measurement. However we will use it as a minimum unit of information to be able to send data to the Tangle without having sensors connected. Please keep this in mind, so this value should not be taken into account for critical applications.*
 
-## Download Firmware on ESP32
+# Download Firmware on ESP32
 This repository uses the ***Iot2Tangle C Core devices*** adapted for ***ESP32-FreeRTOS*** offered in the official *Espressif Toolchain ESP-IDF SDK*. Once the SDK is installed you will have all the tools to compile and download the program on your ESP32.
 
+
+## 1) Install ESP-IDF SDK:
 ### Windows:
-#### 1) Install ESP-IDF SDK:
 The easiest way to install ESP-IDF and their prerequisites is to download the ESP-IDF Tools installer from this URL:
 <https://dl.espressif.com/dl/esp-idf-tools-setup-2.3.exe>
 
@@ -34,65 +35,7 @@ Just follow the steps and you will have the official *Espressif SDK Toolchain* i
 To check other methods, the following page is suggested: 
 <https://docs.espressif.com/projects/esp-idf/en/latest/esp32/get-started/windows-setup.html>
 
-#### 2) Download the Iot2Tangle ESP32 Repository:
-You can download the repository directly from Github, or from Command Prompt with the following command:
-```
-git clone https://github.com/iot2tangle/ESP32.git
-```
-#### 3) Edit the file config.h
-The *config.h* file must be opened and modified, this file is in the directory *'ESP32/http/main'* of the repository.
-
-This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams HTTP Gateway* running, the *Device Id*, and others configurations. The *Id Name Device* you define here must be between the devices you set in on the *Gateway configuration file*. 
-```
-const char* id_name = "ESP32-HTTP";
-
-/* Network Configuration */
-const char* ssid_WiFi = "mySSID";
-const char* pass_WiFi = "myPASS";
-
-/* HTTP Endpoint Configuration */
-const char* address = "192.168.1.131/sensor_data";    /* Endpoint address (HTTP), must NOT include 'http://xxx' or 'tcp://xxx' */
-int port = 8080;
-
-/* Enable Sensors */
-bool isEnable_TemperatureIntern = true;
-bool isEnable_TemperatureExtern = true;	   /* true: Enable  --  false: Disable */
-bool isEnable_Humidity = true;
-...
-
-/* Interval of time */
-long interval = 30;    /* Time in seconds between */
-```
-#### 4) Open ESP-IDF Toolchain and set position in the repository directory
-Open the newly installed program ***ESP-IDF Command Prompt***
-
-Using *Command Prompt* navigation, you must set position in ***'http'*** folder:
-```
-cd ESP32/http
-```
-#### 5) Compile and Download the Firmware:
-Once you make sure you are at the root of the *http* folder run the following command:
-```
-idf.py build
-```
-If the compilation was correct it should read: *Project build complete*.
-
-Now make sure you have ESP32 connected to your computer, and know what COM port it is connected to. (You can see this in 'Device Manager'). 
-
-Then run the following command that will start flashing the firmware. (You will probably have to press the reset button on your ESP32 development board, even several times for it to recognize the board.)
-```
-idf.py -p COM1 flash				# COM1 is an example, you must put your port
-```
-Upon completion, the firmware is downloaded to your ESP32. If the *I2T Streams HTTP Gateway* is configured correctly (we will explain this next), ***you will be sending data to Tangle via Streams***.
-
-You can watch the execution of the Binary by monitoring the COM port used
-```
-idf.py monitor serial COM1				# COM1 is an example, you must put your port
-```
-
-
 ### Linux and macOS:
-#### 1) Install ESP-IDF SDK:
 Prerequisites of ESP-IDF SDK:
 ```
 sudo apt update
@@ -110,14 +53,16 @@ cd ~/esp-idf
 ```
 After doing this last step do not close the shell, as we will compile and flash from here. If you close the shell you will have to do the previous step again.
 
-#### 2) Download the Iot2Tangle ESP32 Repository:
+## 2) Download the Iot2Tangle ESP32 Repository and go to the 'http-sender' folder:
+You can download the repository directly from Github, or from shell or Command Prompt with the following command:
 ```
 git clone https://github.com/iot2tangle/ESP32.git
+cd ESP32/http-sender
 ```
-#### 3) Edit the file config.h
-The *config.h* file must be opened and modified, this file is in the directory *'ESP32/http/main'* of the repository.
+## 3) Edit the file config.h
+The *config.h* file must be opened and modified, this file is in the directory *'ESP32/http-sender/main'* of the repository.
 
-This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams HTTP Gateway* running, the *Device Id*, and others configurations. The *Id Name Device* you define here must be between the devices you set in on the *Gateway configuration file*. 
+This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams HTTP Gateway* or *Keepy* running, the *Device Id*, and others configurations. The *Id Name Device* you define here must be between the devices you set in on the *Gateway configuration file*. 
 ```
 const char* id_name = "ESP32-HTTP";
 
@@ -138,33 +83,29 @@ bool isEnable_Humidity = true;
 /* Interval of time */
 long interval = 30;    /* Time in seconds between */
 ```
-#### 4) Open ESP-IDF Toolchain and set position in the repository directory
-Continue with the shell that you had open after installation, you must set position in ***'http'*** folder:
-```
-cd ~/ESP32/http
-```
-#### 4) Compile and Download the Firmware:
-Once you make sure you are at the root of the *http* folder run the following command:
+## 4) Compile and Download the Firmware:
+Remembering to have the ***ESP-IDF Toolchain*** open, and you make sure you are at the root of the *http-sender* folder run the following command:
 ```
 idf.py build
 ```
 If the compilation was correct it should read: *Project build complete*.
 
-Now make sure you have ESP32 connected to your computer, then run the following command that will start flashing the firmware. (You will probably have to press the reset button on your ESP32 development board, even several times for it to recognize the board.)
+Now make sure you have ESP32 connected to your computer, and know what COM port it is connected to. (You can see this in 'Device Manager'). 
+
+Then run the following command that will start flashing the firmware. (You will probably have to press the reset button on your ESP32 development board, even several times for it to recognize the board.)
 ```
-idf.py -p /dev/ttyUSB0 flash				# /dev/ttyUSB0 is an example, you must put your port. In macOS: '/dev/cu' 
+idf.py -p COM1 flash    # COM1 is an Windows port example, you must put your port. In Linux /dev/ttyUSB0 is an example, and in macOS: '/dev/cu' 
 ```
-Upon completion, the firmware is downloaded to your ESP32. If the *I2T Streams HTTP Gateway* is configured correctly (we will explain this next), ***you will be sending data to Tangle via Streams***. 
 
+Upon completion, the firmware is downloaded to your ESP32. If the *I2T Streams HTTP Gateway* is configured correctly (we will explain this next), ***you will be sending data to Tangle via Streams***.
 
-
-## Debugging
+# Debugging
 If configured correctly, *ESP32* should be sending data to the gateway automatically. However, you may want to verify that it is running on *ESP32*.
 
 The code continuously sends information out the **serial port**, so it can read the serial port to see what is happening and detect errors.
 
 You can use the 'Arduino Serial Monitor' for this, but we recommend using the following software:
-### Windows:
+## Windows:
 Open *Command Prompt*.
 
 Configure the Baud Rate of the port to 115200 bps:
@@ -175,7 +116,7 @@ Read the serial port:
 ```
 copy COM1: con:
 ```
-### Linux and macOS:
+## Linux and macOS:
 Install *cu Monitor*. It is an excellent shell monitor and very useful.
 ```
 sudo apt install cu
