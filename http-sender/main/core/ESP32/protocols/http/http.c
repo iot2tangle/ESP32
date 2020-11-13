@@ -50,7 +50,7 @@ bool socket_sender(const char* endp, int p, const char* _top, const char* _us, c
 		esp_http_client_set_post_field(client, j, strlen(j));
 		err = esp_http_client_perform(client);
 
-		if (err == 28676)
+		if (err == 28676 || err == 0)
 		{
 			ESP_LOGI(TAG, "Data Sucessfully sent to Tangle!");
 			esp_http_client_cleanup(client);
