@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -22,8 +23,8 @@ char* s;
 
 bool check_bme280()
 {   
-    int ret;
-    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+	int ret;
+	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
     i2c_master_write_byte(cmd, BME280_SENSOR_ADDR << 1 | WRITE_BIT, ACK_CHECK_EN);
     i2c_master_write_byte(cmd, BME280_SENSOR_ADDR, ACK_CHECK_EN);
