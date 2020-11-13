@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -23,11 +22,18 @@ char* s;
 
 bool check_bme280()
 {   
-   /* id_bme280 = slave_read_u16(BME280_SENSOR_ADDR);
-    if(id_bme280 == 0)
-		return true;
-    else*/
-		return false;
+    int ret;
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, BME280_SENSOR_ADDR << 1 | WRITE_BIT, ACK_CHECK_EN);
+    i2c_master_write_byte(cmd, BME280_SENSOR_ADDR, ACK_CHECK_EN);
+    i2c_master_stop(cmd);
+    ret = i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, TICK_DELAY);
+    i2c_cmd_link_delete(cmd);
+    if (ret == ESP_OK)
+    	return true;
+    else
+    	return false;
 }
 
 void init_bme280(bool ft)
@@ -49,24 +55,26 @@ char* get_bme280(int ind)
     readCalibrationData(&cal);
     getRawData(&raw);
     t_fine = getTemperatureCalibration(&cal, raw.temperature);
-   
     s = " ";
   
     if (ind == 0)
     {
-	sprintf(buffer, "%.2f", compensateTemperature(t_fine));
+	//sprintf(buffer, "%.2f", compensateTemperature(t_fine));
+	sprintf(buffer, "%.2f", ((raw.temperature/8388.6) - 40) );
 	s=buffer;
 	return s ; 
     }
     if (ind == 1)
     {
-	sprintf(buffer, "%.2f", compensateHumidity(raw.humidity, &cal, t_fine) );
+	//sprintf(buffer, "%.2f", compensateHumidity(raw.humidity, &cal, t_fine) );
+	sprintf(buffer, "%.2f", (raw.humidity/355.4) );
 	s=buffer;
 	return s ; 
     }
     if (ind == 2)
     {
-	sprintf(buffer, "%.1f", compensatePressure(raw.pressure, &cal, t_fine) / 100 );
+	//sprintf(buffer, "%.1f", compensatePressure(raw.pressure, &cal, t_fine) / 100 );
+	sprintf(buffer, "%.2f", ((raw.pressure/1310.7) + 300) );
 	s=buffer;
 	return s ; 
     }
@@ -215,5 +223,22 @@ uint8_t slave_read_ubyte(uint8_t addr)
 
 uint16_t slave_read_u16(uint8_t addr)
 {
-	return ((slave_read_ubyte(addr) << 8) | (slave_read_ubyte(addr + 1)) );
+    i2c_cmd_handle_t cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, BME280_SENSOR_ADDR << 1, ACK_CHECK_EN);
+    i2c_master_write_byte(cmd, addr, 1);
+    i2c_master_stop(cmd);
+    i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, TICK_DELAY);
+    i2c_cmd_link_delete(cmd);
+
+    uint8_t buf;
+    cmd = i2c_cmd_link_create();
+    i2c_master_start(cmd);
+    i2c_master_write_byte(cmd, BME280_SENSOR_ADDR << 1 | 1, ACK_CHECK_EN);
+    i2c_master_read(cmd, &buf, 16, 1);
+    i2c_master_stop(cmd);
+    i2c_master_cmd_begin(I2C_PORT_NUMBER, cmd, TICK_DELAY);
+    i2c_cmd_link_delete(cmd);
+    
+    return buf;
 }
