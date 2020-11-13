@@ -16,7 +16,11 @@ This is just an example, the code is prepared to receive any type of data and *y
 The default *ESP32 Outputs GPIOs* are:
 **Output/Relay 1 -> GPIO26  --  Output/Relay 2 -> GPIO27  --  Output/Relay 3 -> GPIO14  --  Output/Relay 4 -> GPIO12**
 
-![I2T Sensors Stack on ESP32](https://iot2tangle.io/assets/screenshots/ESP32-I2T.png)
+![ESP32 receiver Hardware connections](https://i.postimg.cc/TPRRDP3g/ESP-illustrtor-01.png)
+
+It is quite possible that an external 5V source is needed to power the relays, as development boards generally do not have enough power to power a relay
+
+**IMPORTANT:** The moment you start using Relays is when, ***for your safety, you should pay close attention to their electrical connections***. Whenever you are going to make changes to the connection make sure you have disconnected the AC connector, otherwise there may be a risk of electrocution. The following link from *Panasonic* company has safety tips when handling Relays. [Relays Cautions for Use - Panasonic](https://www3.panasonic.biz/ac/e/control/relay/cautions_use/index.jsp)
 
 # Download Firmware on ESP32
 This repository uses the ***Iot2Tangle C Core receiver devices*** adapted for ***ESP32-FreeRTOS*** offered in the official *Espressif Toolchain ESP-IDF SDK*. Once the SDK is installed you will have all the tools to compile and download the program on your ESP32.
@@ -110,12 +114,13 @@ Upon completion, the firmware is downloaded to your ESP32. If the *Keepy* is con
 
 
 # Debugging
-If configured correctly, *ESP32* should be sending data to the gateway automatically. However, you may want to verify that it is running on *ESP32*.
+## Open Serial Monitor
+If configured correctly, *ESP32* should be getting data from ***Keepy*** automatically. However, you may want to verify that it is running on *ESP32*.
 
 The code continuously sends information out the **serial port**, so it can read the serial port to see what is happening and detect errors.
 
 You can use the 'Arduino Serial Monitor' for this, but we recommend using the following software:
-## Windows:
+### Windows:
 Open *Command Prompt*.
 
 Configure the Baud Rate of the port to 115200 bps:
@@ -126,7 +131,7 @@ Read the serial port:
 ```
 copy COM1: con:
 ```
-## Linux and macOS:
+### Linux and macOS:
 Install *cu Monitor*. It is an excellent shell monitor and very useful.
 ```
 sudo apt install cu
@@ -135,11 +140,19 @@ Run *cu Monitor*:
 ```
 cu -l /dev/ttyUSB0 -s 115200
 ```
-
 The following screenshot is a reading of the *Serial Port*, you should see something like this:
 
-![Raspberry with BME280 sending data to the Tangle](https://i.postimg.cc/cH6TWpXP/Screenshot-from-2020-10-16-11-33-05.png)
+![ESP32 receiver Serial Monitor](https://i.postimg.cc/m2zhLhPr/Screenshot-from-2020-11-12-12-20-21.png)
 
+## Send Harcoded Json to Keepy to see ESP32 reactions
+
+You can run the available examples quickly by sending the following json which will activate all 4 relays:
+
+```curl --location --request POST 'YOUR-KEEPY-HOST:3002/messages' --header 'Content-Type: application/json' --data-raw '{"iot2tangle":[{"sensor":"Internal","data":[{"InternalTemperature":"47.24"}]},{"sensor":"Environmental","data":[{"Temperature":"62.3"},{"Humidity":"34.2"},{"Pressure":"998.20"}]},{"sensor":"Acoustic","data":[{"SoundLevel":"High"}]},{"sensor":"Light","data":[{"Light":"32"}]},{"sensor":"Accelerometer","data":[{"X":"3.98"},{"Y":"0.06"},{"Z":"9.20"}]},{"sensor":"Gyroscope","data":[{"X":"0.40"},{"Y":"-0.43"},{"Z":"-0.05"}]}],"device": "ESP32-Receiver","timestamp": "1601653408"}'```
+
+and the following command will deactivate them since it changes the values of the sensors:
+
+```curl --location --request POST 'YOUR-KEEPY-HOST:3002/messages' --header 'Content-Type: application/json' --data-raw '{"iot2tangle":[{"sensor":"Internal","data":[{"InternalTemperature":"47.24"}]},{"sensor":"Environmental","data":[{"Temperature":"12.5"},{"Humidity":"81.2"},{"Pressure":"998.20"}]},{"sensor":"Acoustic","data":[{"SoundLevel":"Low"}]},{"sensor":"Light","data":[{"Light":"32"}]},{"sensor":"Accelerometer","data":[{"X":"0.58"},{"Y":"0.06"},{"Z":"9.20"}]},{"sensor":"Gyroscope","data":[{"X":"0.40"},{"Y":"-0.43"},{"Z":"-0.05"}]}],"device": "ESP32-Receiver","timestamp": "1601653413"}'```
 
 # Json Accepted example
 
