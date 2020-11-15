@@ -16,7 +16,7 @@ This is just an example, the code is prepared to receive any type of data and *y
 The default *ESP32 Outputs GPIOs* are:
 **Output/Relay 1 -> GPIO26  --  Output/Relay 2 -> GPIO27  --  Output/Relay 3 -> GPIO14  --  Output/Relay 4 -> GPIO12**
 
-![ESP32 receiver Hardware connections](https://i.postimg.cc/TPRRDP3g/ESP-illustrtor-01.png)
+![ESP32 receiver Hardware connections](https://iot2tangle.io/assets/screenshots/ESPReceiver.png)
 
 It is quite possible that an external 5V source is needed to power the relays, as development boards generally do not have enough power to power a relay
 
