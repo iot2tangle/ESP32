@@ -45,7 +45,7 @@ bool socket_sender(const char *endp, int p, const char *_top, const char *_us, c
     esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt_cfg);
     esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, client);
     esp_err_t error = esp_mqtt_client_start(client);
-    ESP_LOGI(TAG, "MQTT Sender return:%s",esp_err_to_name(error));
+    ESP_LOGI(TAG, "MQTT Sender return: %s",esp_err_to_name(error));
 
     int msg_id;
     msg_id = esp_mqtt_client_subscribe(client, _top, 1);
@@ -92,7 +92,7 @@ bool init_socket(const char *endp, int p, const char *_us, const char *_pass, bo
         esp_mqtt_client_handle_t client = esp_mqtt_client_init(&mqtt_cfg);
         esp_mqtt_client_register_event(client, ESP_EVENT_ANY_ID, mqtt_event_handler, client);
         esp_err_t error = esp_mqtt_client_start(client);
-        ESP_LOGI(TAG, "error:%s",esp_err_to_name(error));
+        ESP_LOGI(TAG, "MQTT Sender return: %s",esp_err_to_name(error));
 
         int msg_id;
         msg_id = esp_mqtt_client_subscribe(client, "/topic/raaa", 1);
