@@ -20,4 +20,4 @@ This is the list of Sensors/Modules that you can connect and it will be recogniz
 ## Available connectivity
 - **[HTTP-sender](https://github.com/iot2tangle/ESP32/tree/main/http-sender)** -- ESP32 will send the sensors data through HTTP to **[I2T HTTP Gateway](https://github.com/iot2tangle/Streams-http-gateway)** or **[Keepy](https://github.com/iot2tangle/Keepy)**
 - **[HTTP-receiver](https://github.com/iot2tangle/ESP32/tree/main/http-receiver)** -- ESP32 will receive the sensors data through HTTP from **[Keepy](https://github.com/iot2tangle/Keepy)** and performs actions based on the data received (for now it is optimized only to work with Keepy).
-- **[MQTT-sender](https://github.com/iot2tangle/ESP32/tree/main/mqtt-sender)** -- ESP32 will send the sensors data through MQTT to **[I2T MQTT Gateway](https://github.com/iot2tangle/Streams-mqtt-gateway)** or **[Keepy](https://github.com/iot2tangle/Keepy)**
+- **[MQTT-sender](https://github.com/iot2tangle/ESP32/tree/main/mqtt-sender)** -- ESP32 will send the sensors data through MQTT to **[I2T MQTT Gateway](https://github.com/iot2tangle/Streams-mqtt-gateway)**
