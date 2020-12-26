@@ -1,6 +1,8 @@
 # ESP32 with I2T Sensors Stack  --  HTTP Protocol
 
-ESP32 is one of the microcontrollers for *IoT applications* par excellence. It is widely used for both educational and industrial development due to its great versatility, reliability and low cost. At *I2T* we wanted to add it due to its extensive use in the development community.
+**ESP32** is one of the microcontrollers for *IoT applications* par excellence. Created and manufactured by *Espressif*, it is currently the microcontroller of this compañy most used by the community, it is widely used for both educational and industrial development due to its great versatility, reliability and very low cost.
+
+This Repository contains the source code and the steps to follow to be able to make ***ESP32 Microcontroller*** read sensor data and send it, in an organized way, to the **[Tangle](https://www.youtube.com/watch?v=ESF8UZM70wU) (DLT)** of the **[IOTA Network](https://www.iota.org/)** through the **[Streams](https://www.iota.org/solutions/streams)** layer.
 
 # Setting up your ESP32 with the I2T Sensors Stack
 
