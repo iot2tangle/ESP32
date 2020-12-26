@@ -11,8 +11,8 @@ const char* ssid_WiFi = "mySSID";
 const char* pass_WiFi = "myPASS";
 
 /* Broker Configuration */
-const char* address = "192.168.1.115";  /* Broker address (MQTT), must NOT include 'http://xxx' or 'tcp://xxx' */
-int port = 1883;
+const char* address = "mqtt.iot2tangle.link";  /* Broker address (MQTT), must NOT include 'http://xxx' or 'tcp://xxx' */
+int port = 8883;
 const char* topic = "iot2tangle";		/* MQTT topic */
 const char* user = "mqtti2t";			/* MQTT user */
 const char* password = "integrateeverything";	/* MQTT password */
