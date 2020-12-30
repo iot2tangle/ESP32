@@ -1,4 +1,4 @@
-# ESP32 with I2T Sensors Stack  --  HTTP Protocol
+# ESP32 with I2T Sensors Stack  --  MQTT Protocol
 
 **ESP32** is one of the microcontrollers for *IoT applications* par excellence. Created and manufactured by *Espressif*, it is currently the microcontroller of this compañy most used by the community, it is widely used for both educational and industrial development due to its great versatility, reliability and very low cost.
 
@@ -55,26 +55,30 @@ cd ~/esp-idf
 ```
 After doing this last step do not close the shell, as we will compile and flash from here. If you close the shell you will have to do the previous step again.
 
-## 2) Download the Iot2Tangle ESP32 Repository and go to the 'http-sender' folder:
+## 2) Download the Iot2Tangle ESP32 Repository and go to the 'mqtt-sender' folder:
 You can download the repository directly from Github, or from shell or Command Prompt with the following command:
 ```
 git clone https://github.com/iot2tangle/ESP32.git
-cd ESP32/http-sender
+cd ESP32/mqtt-sender
 ```
 ## 3) Edit the file config.h
-The *config.h* file must be opened and modified, this file is in the directory *'ESP32/http-sender/main'* of the repository.
+The *config.h* file must be opened and modified, this file is in the directory *'ESP32/mqtt-sender/main'* of the repository.
 
-This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams HTTP Gateway* or *Keepy* running, the *Device Id*, and others configurations. The *Id Name Device* you define here must be between the devices you set in on the *Gateway configuration file*. 
+This step is very important if you want to make a connection to the gateway. Your *WiFi Credentials*, the *address* and *port* that will have the *I2T Streams MQTT Gateway* (It is also possible to configure *username* and *password* in case the *Broker* has it), the *Device Id*, and others configurations. The *Id Name Device* you define here must be between the devices you set in on the *Gateway configuration file*. 
 ```
-const char* id_name = "ESP32-HTTP";
+/* Device */
+const char* id_name = "ESP32-MQTT";
 
 /* Network Configuration */
 const char* ssid_WiFi = "mySSID";
 const char* pass_WiFi = "myPASS";
 
-/* HTTP Endpoint Configuration */
-const char* address = "192.168.1.131/sensor_data";    /* Endpoint address (HTTP), must NOT include 'http://xxx' or 'tcp://xxx' */
-int port = 8080;
+/* Broker Configuration */
+const char* address = "mqtt.iot2tangle.link";  /* Broker address (MQTT), must NOT include 'http://xxx' or 'tcp://xxx' */
+int port = 8883;
+const char* topic = "iot2tangle";		/* MQTT topic */
+const char* user = "mqtti2t";			/* MQTT user */
+const char* password = "integrateeverything";	/* MQTT password */
 
 /* Enable Sensors */
 bool isEnable_TemperatureIntern = true;
@@ -85,6 +89,12 @@ bool isEnable_Humidity = true;
 /* Interval of time */
 long interval = 30;    /* Time in seconds between */
 ```
+In case of not using *Username* and *Password* in the *Broker*, leave these fields empty:
+```
+const char* user = "";			/* MQTT user */
+const char* password = "";	/* MQTT password */
+```
+
 ## 4) Compile and Download the Firmware:
 Remembering to have the ***ESP-IDF Toolchain*** open, and you make sure you are at the root of the *http-sender* folder run the following command:
 ```
@@ -133,8 +143,7 @@ The following screenshot is a reading of the *Serial Port*, you should see somet
 
 ![Raspberry with BME280 sending data to the Tangle](https://i.postimg.cc/cH6TWpXP/Screenshot-from-2020-10-16-11-33-05.png)
 
-
-# Setting up the Streams HTTP Gateway
+# Setting up the Streams MQTT Gateway
 
 ## Preparation
 
@@ -144,40 +153,38 @@ Install Rust if you don't have it already. More info about Rust here https://www
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 ```
 
-Make sure you also have the build dependencies installed, if not run:  
+Make sure you also have the build dependencies installed, if not run:
 
 ```
 sudo apt update
-sudo apt install build-essential pkg-config libssl-dev  
+sudo apt install build-essential pkg-config libssl-dev cmake 
 ```
 
 ## Installing the Streams Gateway
-Get the Streams Gateway repository
-https://github.com/iot2tangle/Streams-http-gateway
-
+Get the Streams MQTT Gateway repository
+https://github.com/iot2tangle/Streams-mqtt-gateway
 ```
-git clone https://github.com/iot2tangle/Streams-http-gateway
+git clone https://github.com/iot2tangle/Streams-mqtt-gateway
 ```
-
-Navigate to the root of **Streams-http-gateway** directory and edit the **config.json** file to define yours *device names*, *endpoint*, *port*, you can also change the IOTA Full Node used, among others.
+Navigate to the root of **Streams-MQTT-gateway** directory and edit the **config.json** file to define yours *device names*, *broker address*, *ports*, you can also change the IOTA Full Node used, among others.
 
 ## Start the Streams Server
 
 ### Sending messages to the Tangle
 
-Run the Streams Gateway:  
+Run the Streams Gateway:
 
 ```
 cargo run --release  
 ```
-This will compile and start the *Streams HTTP Gateway*. Note that the compilation process may take from 3 to 25 minutes (Pi3 took us around 15/25 mins, Pi4 8 mins and VPS or desktop machines will generally compile under the 5 mins) depending on the device you are using as host.
+
+This will compile and start the *Streams Gateway*. Note that the compilation process may take from 3 to 25 minutes (Pi3 took us around 15/25 mins, Pi4 8 mins and VPS or desktop machines will generally compile under the 5 mins) depending on the device you are using as host.
 You will only go through the compilation process once and any restart done later will take a few seconds to have the Gateway working.
 
 Once started, the ***Channel Id*** will be displayed, and the gateway will be open waiting for data to send to the Tangle.
 
-![Streams Gateway receiving data](https://i.postimg.cc/zfz0tbWz/Screenshot-from-2020-10-16-11-44-59.png)
+![Streams Gateway receiving data](https://i.postimg.cc/pVmbty9s/Screenshot-from-2020-10-16-19-05-09.png)
 *The Channel Id that will allow subscribers to access the channel data.*
-
 ### Reading messages from the Tangle
 
 You can read the received messages directly from the **I2T Explorer**: https://explorer.iot2tangle.io/ using the Channel Id printed by the Gateway in shell.   
