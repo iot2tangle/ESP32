@@ -10,6 +10,8 @@ idf_component_register(SRCS "app_main.c"
 			     			"core/ESP32/sensors/mpu6050/mpu6050.c"
 			     			"core/ESP32/sensors/bh1750/bh1750.c"
                             "core/ESP32/sensors/acoustic/acoustic.c"
+                            "core/ESP32/protocols/BLE/BLE.c"
+
                     INCLUDE_DIRS ".")
                     
 add_definitions(-DESP32 -DMICROCONTROLLER -DSHELLPRINT)

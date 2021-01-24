@@ -4,6 +4,7 @@
 #include "struct-device.h"
 #include "config.h"
 #include "devices.h"
+#include "core/ESP32/protocols/BLE/BLE.h"
 
 
 void config(struct device *z)
@@ -75,6 +76,7 @@ void led_blinks(int led, int iter, int usec)	// LED Blink function-> led: 0 Gree
 
 void createServer_BLE(struct device *z)
 {	
+	ble_socket();
 	printf("  CREATED BLE SERVER\n");
 }
 
