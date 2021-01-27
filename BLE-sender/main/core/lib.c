@@ -13,14 +13,59 @@ void config(struct device *z, struct gatt *ble)
     /* User assignments */
     z->id = id_name;
     
+    ble->service_TAM=6;
     
-    ble->service_TAM=5;
+    // First Sensor
+    strcpy(ble->service_name[0], "Internal");
+    ble->charact_TAM[0] = 1;
+    	strcpy(ble->charact_name[0][0], "InternalTemperature"); 
+    	ble->isEnable[0][0] = isEnable_TemperatureIntern;
+
+    // Second Sensor
+    strcpy(ble->service_name[1], "Enviromental");
+    ble->charact_TAM[1] = 3;
+    	strcpy(ble->charact_name[1][0], "Temperature"); 
+    	ble->isEnable[1][0] = isEnable_TemperatureExtern;
+    	strcpy(ble->charact_name[1][1], "Humidity"); 
+    	ble->isEnable[1][0] = isEnable_Humidity;
+    	strcpy(ble->charact_name[1][2], "Pressure"); 
+    	ble->isEnable[1][0] = isEnable_Pressure;
     
-    
-//    z->isEnable[0] = isEnable_TemperatureIntern;
-//    z->isEnable[1] = isEnable_TemperatureExtern;
-//    z->isEnable[2] = isEnable_Humidity;
-//    z->isEnable[3] = isEnable_Pressure;
+    // Third Sensor
+    strcpy(ble->service_name[2], "Acoustic");
+    ble->charact_TAM[2] = 1;
+    	strcpy(ble->charact_name[2][0], "SoundLevel"); 
+    	ble->isEnable[2][0] = isEnable_TemperatureExtern;
+    	
+    // Fourth Sensor
+    strcpy(ble->service_name[3], "Light");
+    ble->charact_TAM[3] = 1;
+    	strcpy(ble->charact_name[3][0], "Light"); 
+    	ble->isEnable[3][0] = isEnable_TemperatureExtern;
+    	   
+    // Fifth Sensor
+    strcpy(ble->service_name[4], "Accelerometer");
+    ble->charact_TAM[4] = 3;
+    	strcpy(ble->charact_name[4][0], "X"); 
+    	ble->isEnable[4][0] = isEnable_TemperatureExtern;
+    	strcpy(ble->charact_name[4][1], "Y"); 
+    	ble->isEnable[4][0] = isEnable_Humidity;
+    	strcpy(ble->charact_name[4][2], "Z"); 
+    	ble->isEnable[4][0] = isEnable_Pressure;  
+
+    // Sixth Sensor
+    strcpy(ble->service_name[5], "Gyroscope");
+    ble->charact_TAM[5] = 3;
+    	strcpy(ble->charact_name[5][0], "X"); 
+    	ble->isEnable[5][0] = isEnable_TemperatureExtern;
+    	strcpy(ble->charact_name[5][1], "Y"); 
+    	ble->isEnable[5][0] = isEnable_Humidity;
+    	strcpy(ble->charact_name[5][2], "Z"); 
+    	ble->isEnable[5][0] = isEnable_Pressure;
+    	
+//    z->isEnable[1] = ;
+//    z->isEnable[2] = ;
+//    z->isEnable[3] = ;
 //    z->isEnable[4] = isEnable_Acoustic;
 //    z->isEnable[5] = isEnable_Light;
 //    z->isEnable[6] = isEnable_Accelerometer_X;
@@ -30,10 +75,10 @@ void config(struct device *z, struct gatt *ble)
 //    z->isEnable[10] = isEnable_Gyroscope_Y;
 //    z->isEnable[11] = isEnable_Gyroscope_Z;
 
-//    z->s_name[0] = "InternalTemperature"; 
-//    z->s_name[1] = "Temperature";
+//    z->
+//    z->s_name[1] = "";
 //    z->s_name[2] = "Humidity";
-//    z->s_name[3] = "Pressure";
+//    z->s_name[3] = "";
 //    z->s_name[4] = "SoundLevel";
 //    z->s_name[5] = "Light";
 //    z->s_name[6] = "X";
