@@ -9,7 +9,7 @@
 #define CHARACT_MAX_TAM 6
 
 struct gatt {
-
+   	char id[40];
 	uint8_t service_TAM;
 	uint8_t charact_TAM[SERVICE_MAX_TAM];
 	
