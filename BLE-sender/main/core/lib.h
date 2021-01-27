@@ -5,7 +5,7 @@
 
 void led_blinks (int, int, int);
 void config(struct device *);
-void createServer_BLE(struct device *);
+void createServer_BLE(struct device *, struct gatt *);
 void initPeripherals(long *); 
 void pnp_sensors();
 void getData(struct device *,long *);

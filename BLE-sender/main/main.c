@@ -7,13 +7,13 @@
 #include "core/ESP32/protocols/BLE/data-gatt-struct.h"
 
 struct device dev;
-struct gatt service[4];
+struct gatt ble;
 
 long count, init_t;
 
 int main ()
 {	
-    config(&dev);			/* Configure Name of the device, Endpoint address and Wifi credentials (if its a WiFi Connection), return string with the endpoint */	
+    config(&dev, &ble);			/* Configure Name of the device, Endpoint address and Wifi credentials (if its a WiFi Connection), return string with the endpoint */	
     initPeripherals(&count);	/* Init GPIOs, I2C and ADC */
     createServer_BLE(&dev);	/* Will drop out of this structure only when it has connected to the network and checks the existence of the endpoint */ 
 	

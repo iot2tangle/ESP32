@@ -4,39 +4,44 @@
 #include "struct-device.h"
 #include "config.h"
 #include "devices.h"
-#include "core/ESP32/protocols/BLE/BLE.h"
+#include "ESP32/protocols/BLE/BLE.h"
+#include "ESP32/protocols/BLE/data-gatt-struct.h"
 
 
-void config(struct device *z)
+void config(struct device *z, struct gatt *ble)
 {   
     /* User assignments */
     z->id = id_name;
     
-    z->isEnable[0] = isEnable_TemperatureIntern;
-    z->isEnable[1] = isEnable_TemperatureExtern;
-    z->isEnable[2] = isEnable_Humidity;
-    z->isEnable[3] = isEnable_Pressure;
-    z->isEnable[4] = isEnable_Acoustic;
-    z->isEnable[5] = isEnable_Light;
-    z->isEnable[6] = isEnable_Accelerometer_X;
-    z->isEnable[7] = isEnable_Accelerometer_Y;
-    z->isEnable[8] = isEnable_Accelerometer_Z;
-    z->isEnable[9] = isEnable_Gyroscope_X;
-    z->isEnable[10] = isEnable_Gyroscope_Y;
-    z->isEnable[11] = isEnable_Gyroscope_Z;
+    
+    
+    
+    
+//    z->isEnable[0] = isEnable_TemperatureIntern;
+//    z->isEnable[1] = isEnable_TemperatureExtern;
+//    z->isEnable[2] = isEnable_Humidity;
+//    z->isEnable[3] = isEnable_Pressure;
+//    z->isEnable[4] = isEnable_Acoustic;
+//    z->isEnable[5] = isEnable_Light;
+//    z->isEnable[6] = isEnable_Accelerometer_X;
+//    z->isEnable[7] = isEnable_Accelerometer_Y;
+//    z->isEnable[8] = isEnable_Accelerometer_Z;
+//    z->isEnable[9] = isEnable_Gyroscope_X;
+//    z->isEnable[10] = isEnable_Gyroscope_Y;
+//    z->isEnable[11] = isEnable_Gyroscope_Z;
 
-    z->s_name[0] = "InternalTemperature"; 
-    z->s_name[1] = "Temperature";
-    z->s_name[2] = "Humidity";
-    z->s_name[3] = "Pressure";
-    z->s_name[4] = "SoundLevel";
-    z->s_name[5] = "Light";
-    z->s_name[6] = "X";
-    z->s_name[7] = "Y";
-    z->s_name[8] = "Z";
-    z->s_name[9] = "X";
-    z->s_name[10] = "Y";
-    z->s_name[11] = "Z";
+//    z->s_name[0] = "InternalTemperature"; 
+//    z->s_name[1] = "Temperature";
+//    z->s_name[2] = "Humidity";
+//    z->s_name[3] = "Pressure";
+//    z->s_name[4] = "SoundLevel";
+//    z->s_name[5] = "Light";
+//    z->s_name[6] = "X";
+//    z->s_name[7] = "Y";
+//    z->s_name[8] = "Z";
+//    z->s_name[9] = "X";
+//    z->s_name[10] = "Y";
+//    z->s_name[11] = "Z";
 
     z->interv = interval;
 
