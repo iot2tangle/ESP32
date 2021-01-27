@@ -17,9 +17,27 @@
 
 #include "sdkconfig.h"
 
-#define GATTS_TAG "ESP32_I2T"
-
 #define TAM_SERVICES 2
+
+///Declare the static function
+static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param);
+
+#define GATTS_NUM_HANDLE_TEST_A     20
+
+
+#define TEST_DEVICE_NAME            "ESP32_I2T"
+#define GATTS_TAG "ESP32_I2T"
+#define TEST_MANUFACTURER_DATA_LEN  17
+
+#define GATTS_DEMO_CHAR_VAL_LEN_MAX 0x40
+
+#define PREPARE_BUF_MAX_SIZE 1024
+
+#define PROFILE_NUM 1
+#define PROFILE_A_APP_ID 0
+
+int bandera = 1;
+
 
 uint8_t services_handles[TAM_SERVICES] = {0};
 
@@ -37,34 +55,6 @@ void funcion_guarda_handles(uint8_t valor)
 		
 	}
 }
-
-
-
-///Declare the static function
-static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param);
-
-uint8_t uuid128_s1[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
-uint8_t uuid128_s2[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
-
-uint8_t uuid128_s1_char1[16] = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
-uint8_t uuid128_s1_char2[16] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
-uint8_t uuid128_s2_char1[16] = {0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
-uint8_t uuid128_s2_char2[16] = {0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
-
-#define GATTS_NUM_HANDLE_TEST_A     8
-
-
-#define TEST_DEVICE_NAME            "ESP32_I2T"
-#define TEST_MANUFACTURER_DATA_LEN  17
-
-#define GATTS_DEMO_CHAR_VAL_LEN_MAX 0x40
-
-#define PREPARE_BUF_MAX_SIZE 1024
-
-#define PROFILE_NUM 1
-#define PROFILE_A_APP_ID 0
-
-int bandera = 1;
 
 static uint8_t char1_str[] = {0x11,0x22,0x33};
 static esp_gatt_char_prop_t a_property = 0;
@@ -340,8 +330,11 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
     switch (event) {
     case ESP_GATTS_REG_EVT:
     	
-    	create_service(param, gatts_if, uuid128_s1);
-    	create_service(param, gatts_if, uuid128_s2);
+    	for (int i=0; i<TAM_SERVICES; i++)
+    	{
+    		uint8_t uuid_service[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, i+1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
+    		create_service(param, gatts_if, uuid_service);
+		}
     
         break;
 
@@ -359,21 +352,19 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 		ESP_LOGE(GATTS_TAG,"  services_handles[%d] = %d", i+1, services_handles[i]);
 		}
   
-    	
-    	if (services_handles[0] == param->create.service_handle)
+    	for (int i=0; i<TAM_SERVICES; i++)
     	{
-		    create_characteristic(param, uuid128_s1_char1);
-			
-			create_characteristic(param, uuid128_s1_char2);
-        }       
-        
-    	if (services_handles[1] == param->create.service_handle)
-		{  
-			create_characteristic(param, uuid128_s2_char1);
-			
-			create_characteristic(param, uuid128_s2_char2);
-		}
-
+			if (services_handles[i] == param->create.service_handle)
+			{
+	 			for (int j=0; j<5; j++)
+	 			{
+					//uint8_t uuid128_s1_char1[16] = {j, 0x00, 0x00, 0x00, 0x00, 0x00, i, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
+					uint8_t uuid_char[16] = {j, 0x00, 0x00, 0x00, 0x00, 0x00, i+1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
+				
+					create_characteristic(param, uuid_char);
+				}
+			}
+    	}
         break;
 
 
