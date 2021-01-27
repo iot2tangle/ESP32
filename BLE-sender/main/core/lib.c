@@ -14,7 +14,7 @@ void config(struct device *z, struct gatt *ble)
     z->id = id_name;
     
     
-    
+    ble->service_TAM=5;
     
     
 //    z->isEnable[0] = isEnable_TemperatureIntern;
