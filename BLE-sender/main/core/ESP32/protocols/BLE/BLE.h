@@ -3,7 +3,8 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include "data-gatt-struct.h"
 
-void ble_socket();
+void ble_socket(struct gatt *);
 
 #endif

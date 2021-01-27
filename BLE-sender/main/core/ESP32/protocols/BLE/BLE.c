@@ -14,18 +14,16 @@
 #include "esp_bt_defs.h"
 #include "esp_bt_main.h"
 #include "esp_gatt_common_api.h"
-
 #include "sdkconfig.h"
 
-#define TAM_SERVICES 2
+#include "data-gatt-struct.h"
+
 
 ///Declare the static function
 static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_if, esp_ble_gatts_cb_param_t *param);
 
 #define GATTS_NUM_HANDLE_TEST_A     20
 
-
-#define TEST_DEVICE_NAME            "ESP32_I2T"
 #define GATTS_TAG "ESP32_I2T"
 #define TEST_MANUFACTURER_DATA_LEN  17
 
@@ -38,19 +36,19 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 
 int bandera = 1;
 
+struct gatt *b;
 
-uint8_t services_handles[TAM_SERVICES] = {0};
 
 void funcion_guarda_handles(uint8_t valor)
 {   
-	for (int i=0; i<TAM_SERVICES; i++)
+	for (int i=0; i < b->service_TAM ; i++)
 	{
-		if (services_handles[i] == 0)
+		if (b->service_handle[i] == 0)
 		{
-			services_handles[i] = valor;
+			b->service_handle[i]  = valor;
 			return;
 		}
-		else if (services_handles[i] == valor)
+		else if (b->service_handle[i] == valor)
 			return;		
 	}
 }
@@ -175,7 +173,7 @@ void create_service(esp_ble_gatts_cb_param_t *param, esp_gatt_if_t gatts_if, uin
         gl_profile_tab[PROFILE_A_APP_ID].service_id.id.uuid.len = ESP_UUID_LEN_128;
 		memcpy(gl_profile_tab[PROFILE_A_APP_ID].service_id.id.uuid.uuid.uuid128, uuid_name,16);
 
-        esp_err_t set_dev_name_ret = esp_ble_gap_set_device_name(TEST_DEVICE_NAME);
+        esp_err_t set_dev_name_ret = esp_ble_gap_set_device_name(b->id);
         if (set_dev_name_ret){
             ESP_LOGE(GATTS_TAG, "set device name failed, error code = %x", set_dev_name_ret);
         }
@@ -329,7 +327,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
     switch (event) {
     case ESP_GATTS_REG_EVT:
     	
-    	for (int i=0; i<TAM_SERVICES; i++)
+    	for (int i=0; i < b->service_TAM; i++)
     	{
     		uint8_t uuid_service[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, i+1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
     		create_service(param, gatts_if, uuid_service);
@@ -346,16 +344,16 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
     	funcion_guarda_handles(param->create.service_handle);
     	
     	ESP_LOGE(GATTS_TAG,"Estado Actual de los Handles");
-    	for (int i=0; i<TAM_SERVICES; i++)
+    	for (int i=0; i < b->service_TAM ; i++)
 			{
-		ESP_LOGE(GATTS_TAG,"  services_handles[%d] = %d", i+1, services_handles[i]);
+		ESP_LOGE(GATTS_TAG,"  services_handles[%d] = %d", i+1, b->service_handle[i]);
 		}
   
-    	for (int i=0; i<TAM_SERVICES; i++)
+    	for (int i=0; i < b->service_TAM ; i++)
     	{
-			if (services_handles[i] == param->create.service_handle)
+			if ( b->service_handle[i] == param->create.service_handle)
 			{
-	 			for (int j=0; j<5; j++)
+	 			for (int j=0; j< b->charact_TAM[i] ; j++)
 	 			{
 					//uint8_t uuid128_s1_char1[16] = {j, 0x00, 0x00, 0x00, 0x00, 0x00, i, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
 					uint8_t uuid_char[16] = {j, 0x00, 0x00, 0x00, 0x00, 0x00, i+1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
@@ -531,7 +529,7 @@ static void gatts_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_
     } while (0);
 }
 
-void ble_socket(void)
+void ble_socket(struct gatt *ble)
 {
     esp_err_t ret;
 
@@ -544,6 +542,9 @@ void ble_socket(void)
     ESP_ERROR_CHECK( ret );
 
     ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_CLASSIC_BT));
+    
+    // Assign GATT struct 
+    b = ble;
 
     esp_bt_controller_config_t bt_cfg = BT_CONTROLLER_INIT_CONFIG_DEFAULT();
     ret = esp_bt_controller_init(&bt_cfg);
@@ -590,9 +591,9 @@ void ble_socket(void)
     }
 	
 	vTaskDelay( 2000 / portTICK_PERIOD_MS);
-	for (int i=0; i<TAM_SERVICES; i++)
+	for (int i=0; i < b->service_TAM; i++)
 	{
-		ESP_LOGE(GATTS_TAG, "HANDLE DEL SERVICIO N° %d:  =  %d", i+1, services_handles[i]);
+		ESP_LOGE(GATTS_TAG, "HANDLE DEL SERVICIO N° %d:  =  %d", i+1, b->service_handle[i]);
 	}
     return;
 }

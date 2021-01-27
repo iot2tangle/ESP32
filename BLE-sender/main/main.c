@@ -15,7 +15,7 @@ int main ()
 {	
     config(&dev, &ble);			/* Configure Name of the device, Endpoint address and Wifi credentials (if its a WiFi Connection), return string with the endpoint */	
     initPeripherals(&count);	/* Init GPIOs, I2C and ADC */
-    createServer_BLE(&dev);	/* Will drop out of this structure only when it has connected to the network and checks the existence of the endpoint */ 
+    createServer_BLE(&dev, &ble);	/* Will drop out of this structure only when it has connected to the network and checks the existence of the endpoint */ 
 	
 	//princip.a = 2;
 	

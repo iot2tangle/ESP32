@@ -12,6 +12,7 @@ void config(struct device *z, struct gatt *ble)
 {   
     /* User assignments */
     z->id = id_name;
+    strcpy(ble->id, id_name);
     
     ble->service_TAM=6;
     
@@ -124,9 +125,9 @@ void led_blinks(int led, int iter, int usec)	// LED Blink function-> led: 0 Gree
     }
 }
 
-void createServer_BLE(struct device *z)
+void createServer_BLE(struct device *z, struct gatt *ble)
 {	
-	ble_socket();
+	ble_socket(ble);
 	printf("  CREATED BLE SERVER\n");
 }
 
