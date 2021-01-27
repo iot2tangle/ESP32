@@ -51,8 +51,7 @@ void funcion_guarda_handles(uint8_t valor)
 			return;
 		}
 		else if (services_handles[i] == valor)
-			return;
-		
+			return;		
 	}
 }
 
