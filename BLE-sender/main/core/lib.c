@@ -61,7 +61,6 @@ void config(struct gatt *ble)
     	ble->isEnable[5][0] = isEnable_Humidity;
     	strcpy(ble->charact_name[5][2], "Z"); 
     	ble->isEnable[5][0] = isEnable_Pressure;
-
 }
 
 void initPeripherals(long* c) 
@@ -167,7 +166,6 @@ void updateData(long *c, struct gatt *ble)
 			strcpy(ble->charact_data[5][i], "0");
 		}
     }
-    
 }
 
 void t_delay(long d, long l) 

@@ -38,7 +38,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 struct gatt *b;
 
 
-void funcion_guarda_handles(uint8_t valor)
+void save_handle(uint8_t valor)
 {   
 	for (int i=0; i < b->service_TAM ; i++)
 	{
@@ -129,8 +129,6 @@ static esp_ble_adv_params_t adv_params = {
     .adv_filter_policy = ADV_FILTER_ALLOW_SCAN_ANY_CON_ANY,
 };
 
-
-
 struct gatts_profile_inst {
     esp_gatts_cb_t gatts_cb;
     uint16_t gatts_if;
@@ -168,12 +166,9 @@ void example_write_event_env(esp_gatt_if_t gatts_if, prepare_type_env_t *prepare
 void example_exec_write_event_env(prepare_type_env_t *prepare_write_env, esp_ble_gatts_cb_param_t *param);
 
 
-
-
-
 void create_service(esp_ble_gatts_cb_param_t *param, esp_gatt_if_t gatts_if, uint8_t* uuid_name)
 {
-        ESP_LOGI(GATTS_TAG, "REGISTER_APP_EVT, status %d, app_id %d\n", param->reg.status, param->reg.app_id);
+        ESP_LOGI(GATTS_TAG, "CREATE_SERVICE_EVENT, status %d, app_id %d\n", param->reg.status, param->reg.app_id);
         gl_profile_tab[PROFILE_A_APP_ID].service_id.is_primary = true;
         gl_profile_tab[PROFILE_A_APP_ID].service_id.id.inst_id = 0x00;
         gl_profile_tab[PROFILE_A_APP_ID].service_id.id.uuid.len = ESP_UUID_LEN_128;
@@ -204,13 +199,13 @@ void create_service(esp_ble_gatts_cb_param_t *param, esp_gatt_if_t gatts_if, uin
 
 void create_characteristic(esp_ble_gatts_cb_param_t *param, uint8_t* uuid_name)
 {
-		ESP_LOGI(GATTS_TAG, "A VER SEGUNDO: CREATE_SERVICE_EVT, status %d,  service_handle %d\n", param->create.status, param->create.service_handle);
+		ESP_LOGI(GATTS_TAG, "CREATE_CHARACTERISTIC_EVENT, status %d,  service_handle %d\n", param->create.status, param->create.service_handle);
 		gl_profile_tab[PROFILE_A_APP_ID].service_handle = param->create.service_handle;
 		gl_profile_tab[PROFILE_A_APP_ID].char_uuid.len = ESP_UUID_LEN_128;
 		memcpy(gl_profile_tab[PROFILE_A_APP_ID].char_uuid.uuid.uuid128, uuid_name,16);	
 
 		esp_ble_gatts_start_service(gl_profile_tab[PROFILE_A_APP_ID].service_handle);
-		a_property = ESP_GATT_CHAR_PROP_BIT_READ | ESP_GATT_CHAR_PROP_BIT_WRITE | ESP_GATT_CHAR_PROP_BIT_NOTIFY;
+		a_property = ESP_GATT_CHAR_PROP_BIT_READ;
 		esp_err_t add_char_ret = esp_ble_gatts_add_char(gl_profile_tab[PROFILE_A_APP_ID].service_handle, &gl_profile_tab[PROFILE_A_APP_ID].char_uuid,
 		                                                    ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
 		                                                    a_property,
@@ -220,13 +215,6 @@ void create_characteristic(esp_ble_gatts_cb_param_t *param, uint8_t* uuid_name)
 		   ESP_LOGE(GATTS_TAG, "add char failed, error code =%x",add_char_ret);
 		}
 }
-
-
-
-
-
-
-
 
 
 static void gap_event_handler(esp_gap_ble_cb_event_t event, esp_ble_gap_cb_param_t *param)
@@ -342,19 +330,11 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         break;
 
 
-    case ESP_GATTS_CREATE_EVT:
+    case ESP_GATTS_CREATE_EVT:	
+    	ESP_LOGE(GATTS_TAG,"CREATION_OF_CHARS -- SERVICE CALLBACK %d\n", param->create.service_handle);
     	
-    	
-    	ESP_LOGE(GATTS_TAG,"\nCREACION DE CHARS -- SERVICE CALLBACK %d\n", param->create.service_handle);
-    	// Guarda los servicios de los eventos
-    	funcion_guarda_handles(param->create.service_handle);
-    	
-    	ESP_LOGE(GATTS_TAG,"Estado Actual de los Handles");
-    	for (int i=0; i < b->service_TAM ; i++)
-			{
-		ESP_LOGE(GATTS_TAG,"  services_handles[%d] = %d", i+1, b->service_handle[i]);
-		}
-  
+    	save_handle(param->create.service_handle);     	// Save the handles of the services
+
     	for (int i=0; i < b->service_TAM ; i++)
     	{
 			if ( b->service_handle[i] == param->create.service_handle)
@@ -383,6 +363,9 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         	{
         		if ( param->read.handle == b->char_handle[i][j] )
 				{
+					
+				
+					
 					rsp.attr_value.len = strlen(b->charact_data[i][j]);
 					strcpy(&(rsp.attr_value.value), b->charact_data[i][j]);
 					esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id, ESP_GATT_OK, &rsp);
@@ -518,8 +501,7 @@ static void gatts_event_handler(esp_gatts_cb_event_t event, esp_gatt_if_t gatts_
         }
     }
 
-    /* If the gatts_if equal to profile A, call profile A cb handler,
-     * so here call each profile's callback */
+    /* If the gatts_if equal to profile A, call profile A cb handler, so here call each profile's callback */
     do {
         int idx;
         for (idx = 0; idx < PROFILE_NUM; idx++) {
