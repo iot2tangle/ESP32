@@ -34,7 +34,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 #define PROFILE_NUM 1
 #define PROFILE_A_APP_ID 0
 
-
+char aux_str[256];
 struct gatt *b;
 
 
@@ -326,9 +326,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
     		uint8_t uuid_service[16] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, i+1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
     		create_service(param, gatts_if, uuid_service);
 		}
-    
         break;
-
 
     case ESP_GATTS_CREATE_EVT:	
     	ESP_LOGE(GATTS_TAG,"CREATION_OF_CHARS -- SERVICE CALLBACK %d\n", param->create.service_handle);
@@ -350,7 +348,6 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
     	}
         break;
 
-
     case ESP_GATTS_READ_EVT: {
         ESP_LOGI(GATTS_TAG, "GATT_READ_EVT, conn_id %d, trans_id %d, handle %d\n", param->read.conn_id, param->read.trans_id, param->read.handle);
         esp_gatt_rsp_t rsp;
@@ -363,18 +360,38 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         	{
         		if ( param->read.handle == b->char_handle[i][j] )
 				{
-					
-				
-					
-					rsp.attr_value.len = strlen(b->charact_data[i][j]);
-					strcpy(&(rsp.attr_value.value), b->charact_data[i][j]);
+
+					strcpy(aux_str,"{\"");
+					strcat(aux_str, b->charact_name[i][j]);
+					strcat(aux_str,"\":\"");
+    				strcat(aux_str, b->charact_data[i][j]);
+    				strcat(aux_str,"\"}");
+    				
+//    				char* e = " ";
+//					strcpy(aux_str,"{\"");
+//					e = b->charact_name[i][j];
+//					strcat(aux_str, e);
+//					strcat(aux_str,"\":\"");
+//					e = b->charact_data[i][j];
+//					strcat(aux_str, e);
+//    				strcat(aux_str,"\"}");
+
+
+
+					rsp.attr_value.len = strlen(aux_str);
+					strcpy(&(rsp.attr_value.value), aux_str);
 					esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id, ESP_GATT_OK, &rsp);
+					
+//					rsp.attr_value.len = strlen(b->charact_data[i][j]);
+//					strcpy(&(rsp.attr_value.value), b->charact_data[i][j]);
+//					esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id, ESP_GATT_OK, &rsp);
 				}
         	}
         }     
 
         break;
     }
+
     case ESP_GATTS_WRITE_EVT: {
         ESP_LOGI(GATTS_TAG, "GATT_WRITE_EVT, conn_id %d, trans_id %d, handle %d", param->write.conn_id, param->write.trans_id, param->write.handle);
         if (!param->write.is_prep){
@@ -419,6 +436,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         example_write_event_env(gatts_if, &a_prepare_write_env, param);
         break;
     }
+
     case ESP_GATTS_EXEC_WRITE_EVT:
         ESP_LOGI(GATTS_TAG,"ESP_GATTS_EXEC_WRITE_EVT");
         esp_ble_gatts_send_response(gatts_if, param->write.conn_id, param->write.trans_id, ESP_GATT_OK, NULL);
@@ -429,17 +447,11 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         break;
     case ESP_GATTS_UNREG_EVT:
         break;
-        
-        
-
     case ESP_GATTS_ADD_INCL_SRVC_EVT:
         break;
-    case ESP_GATTS_ADD_CHAR_EVT: {
-      
+    case ESP_GATTS_ADD_CHAR_EVT:     
         break;
-    }
     case ESP_GATTS_ADD_CHAR_DESCR_EVT:
-
         break;
     case ESP_GATTS_DELETE_EVT:
         break;

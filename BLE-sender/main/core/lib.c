@@ -17,15 +17,15 @@ void config(struct gatt *ble)
     // First Sensor
     strcpy(ble->service_name[0], "Internal");
     ble->charact_TAM[0] = 1;
-    	strcpy(ble->charact_name[0][0], "InternalTemperature"); 
+    	strcpy(ble->charact_name[0][0], "Temp"); 
     	ble->isEnable[0][0] = isEnable_TemperatureIntern;
 
     // Second Sensor
     strcpy(ble->service_name[1], "Enviromental");
     ble->charact_TAM[1] = 3;
-    	strcpy(ble->charact_name[1][0], "Temperature"); 
+    	strcpy(ble->charact_name[1][0], "Temp"); 
     	ble->isEnable[1][0] = isEnable_TemperatureExtern;
-    	strcpy(ble->charact_name[1][1], "Humidity"); 
+    	strcpy(ble->charact_name[1][1], "Humid"); 
     	ble->isEnable[1][0] = isEnable_Humidity;
     	strcpy(ble->charact_name[1][2], "Pressure"); 
     	ble->isEnable[1][0] = isEnable_Pressure;
