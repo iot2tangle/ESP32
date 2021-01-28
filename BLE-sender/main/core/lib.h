@@ -8,8 +8,8 @@ void config(struct device *, struct gatt *);
 void createServer_BLE(struct device *, struct gatt *);
 void initPeripherals(long *); 
 void pnp_sensors();
-void getData(struct device *,long *);
-void updateData_BLE(struct device *);
+void getData(struct device *,long *, struct gatt *ble);
+void updateData_BLE(struct device *, struct gatt *);
 void t_delay(long, long); 
 long take_time();
 

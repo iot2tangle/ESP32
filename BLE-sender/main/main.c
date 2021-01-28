@@ -15,19 +15,17 @@ int main ()
 {	
     config(&dev, &ble);			/* Configure Name of the device, Endpoint address and Wifi credentials (if its a WiFi Connection), return string with the endpoint */	
     initPeripherals(&count);	/* Init GPIOs, I2C and ADC */
-    createServer_BLE(&dev, &ble);	/* Will drop out of this structure only when it has connected to the network and checks the existence of the endpoint */ 
-	
-	//princip.a = 2;
-	
+    createServer_BLE(&dev, &ble);	/* Will drop out of this structure only when it has connected to the network and checks the existence of the endpoint */
+
     while (1)
     {	
 	    init_t = take_time();
 
 	    pnp_sensors();		/* re init sensors to be able to plug n play in real time */
 
-	    getData(&dev, &count);
+	    getData(&dev, &count, &ble);
 
-	    updateData_BLE(&dev);
+	    updateData_BLE(&dev, &ble);
 
 	    t_delay(dev.interv, take_time() - init_t);  /* compensated delay */
     }    

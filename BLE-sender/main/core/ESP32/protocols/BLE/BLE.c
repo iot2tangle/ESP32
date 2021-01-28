@@ -34,7 +34,6 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 #define PROFILE_NUM 1
 #define PROFILE_A_APP_ID 0
 
-int bandera = 1;
 
 struct gatt *b;
 
@@ -46,6 +45,13 @@ void funcion_guarda_handles(uint8_t valor)
 		if (b->service_handle[i] == 0)
 		{
 			b->service_handle[i]  = valor;
+			
+			int aux = valor;
+			for (int j=0; j < b->charact_TAM[i]; j++)
+				{
+					aux = aux + 2;
+					b->char_handle[i][j] = aux;
+				}
 			return;
 		}
 		else if (b->service_handle[i] == valor)
@@ -370,22 +376,20 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         esp_gatt_rsp_t rsp;
         memset(&rsp, 0, sizeof(esp_gatt_rsp_t));
         rsp.attr_value.handle = param->read.handle;
-        //rsp.attr_value.value = param->read.value;
         
-        if (bandera < 4)
+        for (int i=0; i < b->service_TAM; i++)
         {
-        	char valor[4] = "hola";
-		    rsp.attr_value.len = sizeof(valor);
-		    //char valor[4] = "hola";
-		    strcpy(&(rsp.attr_value.value), valor);
-//		    rsp.attr_value.value[0] = 0xde;
-//		    rsp.attr_value.value[1] = 0xed;
-//		    rsp.attr_value.value[2] = 0xbe;
-//		    rsp.attr_value.value[3] = 0xef;
-		    bandera++;
-		}
-        esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id,
-                                    ESP_GATT_OK, &rsp);
+        	for (int j=0; j < b->charact_TAM[i]; j++)
+        	{
+        		if ( param->read.handle == b->char_handle[i][j] )
+				{
+					rsp.attr_value.len = strlen(b->charact_data[i][j]);
+					strcpy(&(rsp.attr_value.value), b->charact_data[i][j]);
+					esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id, ESP_GATT_OK, &rsp);
+				}
+        	}
+        }     
+
         break;
     }
     case ESP_GATTS_WRITE_EVT: {

@@ -18,6 +18,7 @@ struct gatt {
 	
 	char charact_name[30][SERVICE_MAX_TAM][CHARACT_MAX_TAM];
 	char charact_data[30][SERVICE_MAX_TAM][CHARACT_MAX_TAM];
+	uint8_t char_handle[SERVICE_MAX_TAM][CHARACT_MAX_TAM];
 	bool isEnable[SERVICE_MAX_TAM][CHARACT_MAX_TAM];
 }; 
 
