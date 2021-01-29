@@ -22,9 +22,9 @@ void config(struct gatt *ble)
     	ble->isEnable[0][0] = isEnable_TemperatureIntern;
 
     // Second Sensor
-    strcpy(ble->service_name[1], "Enviromental");
+    strcpy(ble->service_name[1], "Environmental");
     ble->charact_TAM[1] = 4;
-    	strcpy(ble->charact_name[1][0], "Enviroment"); 
+    	strcpy(ble->charact_name[1][0], "Environment"); 
     	strcpy(ble->charact_name[1][1], "Temp"); 
     	ble->isEnable[1][0] = isEnable_TemperatureExtern;
     	strcpy(ble->charact_name[1][2], "Humid"); 
@@ -139,20 +139,20 @@ void updateData(long *c, struct gatt *ble)
     else
     {
 		for (i=0; i<3; i++)
-			strcpy(ble->charact_data[1][i+1], "0");
+			strcpy(ble->charact_data[1][i+1], "");
     }
 
     /* GET DATA ACOUSTIC */
     if (check_acoustic())
 		strcpy(ble->charact_data[2][1], get_acoustic());
     else	
-		strcpy(ble->charact_data[2][1], "0");
+		strcpy(ble->charact_data[2][1], "");
 
     /* GET DATA LIGHT */
     if (check_bh1750())
 		strcpy(ble->charact_data[3][1], get_bh1750());
     else
-		strcpy(ble->charact_data[3][1], "0");
+		strcpy(ble->charact_data[3][1], "");
 
 
     /* GET DATA MPU6050 */
@@ -168,8 +168,8 @@ void updateData(long *c, struct gatt *ble)
     {
 	 	for (i=0; i<3; i++)
 	 	{
-			strcpy(ble->charact_data[4][i+1], "0");
-			strcpy(ble->charact_data[5][i+1], "0");
+			strcpy(ble->charact_data[4][i+1], "");
+			strcpy(ble->charact_data[5][i+1], "");
 		}
     }
 }

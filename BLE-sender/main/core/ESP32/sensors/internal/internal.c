@@ -24,7 +24,7 @@ char* get_internal()
     s = " ";
 
 //  READ SENSOR DATA
-	temp_celsius= 45.23;
+	temp_celsius= ( temprature_sens_read() - 32 ) / 1.8;
 
     sprintf(buffer, "%.2f", temp_celsius);
 
