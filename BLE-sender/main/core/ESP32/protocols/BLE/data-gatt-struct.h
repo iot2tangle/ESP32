@@ -13,11 +13,11 @@ struct gatt {
 	uint8_t service_TAM;
 	uint8_t charact_TAM[SERVICE_MAX_TAM];
 	
-	char service_name[30][SERVICE_MAX_TAM];
+	char service_name[SERVICE_MAX_TAM][30];
 	uint8_t service_handle[SERVICE_MAX_TAM];
 	
-	char charact_name[30][SERVICE_MAX_TAM][CHARACT_MAX_TAM];
-	char charact_data[20][SERVICE_MAX_TAM][CHARACT_MAX_TAM];
+	char charact_name[SERVICE_MAX_TAM][CHARACT_MAX_TAM][30];
+	char charact_data[SERVICE_MAX_TAM][CHARACT_MAX_TAM][20];
 	uint8_t char_handle[SERVICE_MAX_TAM][CHARACT_MAX_TAM];
 	bool isEnable[SERVICE_MAX_TAM][CHARACT_MAX_TAM];
 }; 

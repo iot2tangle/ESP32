@@ -339,7 +339,6 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 			{
 	 			for (int j=0; j< b->charact_TAM[i] ; j++)
 	 			{
-					//uint8_t uuid128_s1_char1[16] = {j, 0x00, 0x00, 0x00, 0x00, 0x00, i, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
 					uint8_t uuid_char[16] = {j, 0x00, 0x00, 0x00, 0x00, 0x00, i+1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x05, 0x00};
 				
 					create_characteristic(param, uuid_char);
@@ -348,7 +347,8 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
     	}
         break;
 
-    case ESP_GATTS_READ_EVT: {
+    case ESP_GATTS_READ_EVT: 
+    {
         ESP_LOGI(GATTS_TAG, "GATT_READ_EVT, conn_id %d, trans_id %d, handle %d\n", param->read.conn_id, param->read.trans_id, param->read.handle);
         esp_gatt_rsp_t rsp;
         memset(&rsp, 0, sizeof(esp_gatt_rsp_t));
@@ -360,37 +360,30 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
         	{
         		if ( param->read.handle == b->char_handle[i][j] )
 				{
-
-					strcpy(aux_str,"{\"");
-					strcat(aux_str, b->charact_name[i][j]);
-					strcat(aux_str,"\":\"");
-    				strcat(aux_str, b->charact_data[i][j]);
-    				strcat(aux_str,"\"}");
-    				
-//    				char* e = " ";
-//					strcpy(aux_str,"{\"");
-//					e = b->charact_name[i][j];
-//					strcat(aux_str, e);
-//					strcat(aux_str,"\":\"");
-//					e = b->charact_data[i][j];
-//					strcat(aux_str, e);
-//    				strcat(aux_str,"\"}");
-
-
+					if (j==0)
+					{
+						strcpy(aux_str,"{\"Name\":\"");
+						strcat(aux_str, b->charact_name[i][j]);
+						strcat(aux_str,"\"}");			
+					}
+					else
+					{
+						strcpy(aux_str,"{\"");
+						strcat(aux_str, b->charact_name[i][j]);
+						strcat(aux_str,"\":\"");
+						strcat(aux_str, b->charact_data[i][j]);
+						strcat(aux_str,"\"}");
+    				}
 
 					rsp.attr_value.len = strlen(aux_str);
 					strcpy(&(rsp.attr_value.value), aux_str);
 					esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id, ESP_GATT_OK, &rsp);
-					
-//					rsp.attr_value.len = strlen(b->charact_data[i][j]);
-//					strcpy(&(rsp.attr_value.value), b->charact_data[i][j]);
-//					esp_ble_gatts_send_response(gatts_if, param->read.conn_id, param->read.trans_id, ESP_GATT_OK, &rsp);
 				}
         	}
-        }     
+        }
 
         break;
-    }
+ 	}
 
     case ESP_GATTS_WRITE_EVT: {
         ESP_LOGI(GATTS_TAG, "GATT_WRITE_EVT, conn_id %d, trans_id %d, handle %d", param->write.conn_id, param->write.trans_id, param->write.handle);
