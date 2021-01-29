@@ -12,61 +12,71 @@ void config(struct gatt *ble)
     /* User assignments */
     strcpy(ble->id, id_name);
     
-    ble->service_TAM=6;
+    int c = 0;
     
     // First Sensor
-    strcpy(ble->service_name[0], "Internal");
-    ble->charact_TAM[0] = 2;
-    	strcpy(ble->charact_name[0][0], "Internal"); 
-    	strcpy(ble->charact_name[0][1], "Temp"); 
-    	ble->isEnable[0][0] = isEnable_TemperatureIntern;
+    strcpy(ble->service_name[c], "Internal");
+    ble->charact_TAM[c] = 2;
+    	strcpy(ble->charact_name[c][0], "Internal"); 
+    	strcpy(ble->charact_name[c][1], "Temp"); 
 
     // Second Sensor
-    strcpy(ble->service_name[1], "Environmental");
-    ble->charact_TAM[1] = 4;
-    	strcpy(ble->charact_name[1][0], "Environmen"); 
-    	strcpy(ble->charact_name[1][1], "Temp"); 
-    	ble->isEnable[1][0] = isEnable_TemperatureExtern;
-    	strcpy(ble->charact_name[1][2], "Humid"); 
-    	ble->isEnable[1][1] = isEnable_Humidity;
-    	strcpy(ble->charact_name[1][3], "Pressure"); 
-    	ble->isEnable[1][2] = isEnable_Pressure;
+    if (isEnable_Environmental)
+    {
+    	c++;
+    	strcpy(ble->service_name[c], "Environmental");
+    		ble->charact_TAM[c] = 4;
+			strcpy(ble->charact_name[c][0], "Environmen"); 
+			strcpy(ble->charact_name[c][1], "Temp"); 
+			strcpy(ble->charact_name[c][2], "Humid"); 
+			strcpy(ble->charact_name[c][3], "Pressure");
+	}
     
     // Third Sensor
-    strcpy(ble->service_name[2], "Acoustic");
-    ble->charact_TAM[2] = 2;
-    	strcpy(ble->charact_name[2][0], "Acoustic"); 
-    	strcpy(ble->charact_name[2][1], "SoundLevel");
-    	ble->isEnable[2][0] = isEnable_TemperatureExtern;
+    if (isEnable_Acoustic)
+    {
+    	c++;
+		strcpy(ble->service_name[c], "Acoustic");
+		ble->charact_TAM[c] = 2;
+			strcpy(ble->charact_name[c][0], "Acoustic"); 
+			strcpy(ble->charact_name[c][1], "SoundLevel");
+	}
     	
     // Fourth Sensor
-    strcpy(ble->service_name[3], "Light");
-    ble->charact_TAM[3] = 2;
-    	strcpy(ble->charact_name[3][0], "Light"); 
-    	strcpy(ble->charact_name[3][1], "Light"); 
-    	ble->isEnable[3][0] = isEnable_TemperatureExtern;
+    if (isEnable_Light)
+    {
+    	c++;
+		strcpy(ble->service_name[c], "Light");
+		ble->charact_TAM[c] = 2;
+			strcpy(ble->charact_name[c][0], "Light"); 
+			strcpy(ble->charact_name[c][1], "Light"); 
+	}
     	   
     // Fifth Sensor
-    strcpy(ble->service_name[4], "Accelerometer");
-    ble->charact_TAM[4] = 4;
-    	strcpy(ble->charact_name[4][0], "Accelerom"); 
-    	strcpy(ble->charact_name[4][1], "X"); 
-    	ble->isEnable[4][0] = isEnable_TemperatureExtern;
-    	strcpy(ble->charact_name[4][2], "Y"); 
-    	ble->isEnable[4][1] = isEnable_Humidity;
-    	strcpy(ble->charact_name[4][3], "Z"); 
-    	ble->isEnable[4][2] = isEnable_Pressure;  
+    if (isEnable_Accelerometer)
+    {
+		c++;
+			strcpy(ble->service_name[c], "Accelerometer");
+			ble->charact_TAM[c] = 4;
+				strcpy(ble->charact_name[c][0], "Accelerom"); 
+				strcpy(ble->charact_name[c][1], "X"); 
+				strcpy(ble->charact_name[c][2], "Y"); 
+				strcpy(ble->charact_name[c][3], "Z"); 
+	} 
 
     // Sixth Sensor
-    strcpy(ble->service_name[5], "Gyroscope");
-    ble->charact_TAM[5] = 4;
-    	strcpy(ble->charact_name[5][0], "Gyroscope"); 
-    	strcpy(ble->charact_name[5][1], "X"); 
-    	ble->isEnable[5][0] = isEnable_TemperatureExtern;
-    	strcpy(ble->charact_name[5][2], "Y"); 
-    	ble->isEnable[5][1] = isEnable_Humidity;
-    	strcpy(ble->charact_name[5][3], "Z"); 
-    	ble->isEnable[5][2] = isEnable_Pressure;
+    if (isEnable_Gyroscope)
+    {
+		c++;
+		strcpy(ble->service_name[c], "Gyroscope");
+		ble->charact_TAM[c] = 4;
+			strcpy(ble->charact_name[c][0], "Gyroscope"); 
+			strcpy(ble->charact_name[c][1], "X"); 
+			strcpy(ble->charact_name[c][2], "Y"); 
+			strcpy(ble->charact_name[c][3], "Z"); 
+	}
+    	
+    ble->service_TAM= c+1;
 }
 
 void initPeripherals(long* c) 
@@ -120,6 +130,7 @@ void updateData(long *c, struct gatt *ble)
 {
     int i;
     ++(*c);
+    int cnt = 0;
 	
     #ifdef SHELLPRINT	// Printf in shell
 	d_collect_msg( c );
@@ -130,47 +141,72 @@ void updateData(long *c, struct gatt *ble)
     strcpy(ble->charact_data[0][1], get_internal());
 
     /* GET DATA BME280 */
-    if (check_bme280())
+    if (isEnable_Environmental)
     {
-		for (i=0; i<3; i++)
-	   	    strcpy(ble->charact_data[1][i+1], get_bme280(i));
-    }
-    else
-    {
-		for (i=0; i<3; i++)
-			strcpy(ble->charact_data[1][i+1], "");
+    	cnt++;
+		if (check_bme280())
+		{
+			for (i=0; i<3; i++)
+		   	    strcpy(ble->charact_data[cnt][i+1], get_bme280(i));
+		}
+		else
+		{
+			for (i=0; i<3; i++)
+				strcpy(ble->charact_data[cnt][i+1], "");
+		}
     }
 
     /* GET DATA ACOUSTIC */
-    if (check_acoustic())
-		strcpy(ble->charact_data[2][1], get_acoustic());
-    else	
-		strcpy(ble->charact_data[2][1], "");
+    if (isEnable_Acoustic)
+    {
+    	cnt++;
+		if (check_acoustic())
+			strcpy(ble->charact_data[cnt][1], get_acoustic());
+		else	
+			strcpy(ble->charact_data[cnt][1], "");
+	}
 
     /* GET DATA LIGHT */
-    if (check_bh1750())
-		strcpy(ble->charact_data[3][1], get_bh1750());
-    else
-		strcpy(ble->charact_data[3][1], "");
-
-
-    /* GET DATA MPU6050 */
-    if (check_mpu6050())
+    if (isEnable_Light)
     {
-		for (i=0; i<3; i++)
+    	cnt++;
+		if (check_bh1750())
+			strcpy(ble->charact_data[cnt][1], get_bh1750());
+		else
+			strcpy(ble->charact_data[cnt][1], "");
+	}
+
+    /* GET DATA ACCELEROMETER */
+	if (isEnable_Accelerometer)
+    {
+    	cnt++;
+		if (check_mpu6050())
 		{
-			strcpy(ble->charact_data[4][i+1], get_mpu6050(i));
-			strcpy(ble->charact_data[5][i+1], get_mpu6050(i+3));
+			for (i=0; i<3; i++)
+				strcpy(ble->charact_data[cnt][i+1], get_mpu6050(i));
 		}
-    }
-    else
+		else
+		{
+		 	for (i=0; i<3; i++)
+				strcpy(ble->charact_data[cnt][i+1], "");
+		}
+	}
+
+    /* GET DATA GYROSCOPE */
+	if (isEnable_Gyroscope)
     {
-	 	for (i=0; i<3; i++)
-	 	{
-			strcpy(ble->charact_data[4][i+1], "");
-			strcpy(ble->charact_data[5][i+1], "");
+    	cnt++;
+		if (check_mpu6050())
+		{
+			for (i=0; i<3; i++)
+				strcpy(ble->charact_data[cnt][i+1], get_mpu6050(i+3));
 		}
-    }
+		else
+		{
+		 	for (i=0; i<3; i++)
+				strcpy(ble->charact_data[cnt][i+1], "");
+		}
+	}
 }
 
 void t_delay(long d, long l) 
