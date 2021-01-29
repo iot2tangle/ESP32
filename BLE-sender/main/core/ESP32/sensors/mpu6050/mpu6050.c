@@ -13,6 +13,10 @@ i2c_cmd_handle_t cmd;
 
 bool check_mpu6050()
 {
+	#ifdef TEST
+		return true;
+	#endif
+	
 	int ret;
 	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -50,26 +54,44 @@ char* get_mpu6050(int a)
     switch (a) 
     {	
     	case 0:	/* Aceler X */
+    	#ifdef TEST
+			return "0.25";
+		#endif
     	sprintf(buffer, "%.2f",( ((slave_read_byte(ACCEL_XOUT_H) << 8) | slave_read_byte(ACCEL_XOUT_H + 1) ) / 1638.4 ) );
     	s=buffer;
         return s ; 
         case 1:	/* Aceler Y */
+    	#ifdef TEST
+			return "-2.60";
+		#endif
     	sprintf(buffer, "%.2f",( ((slave_read_byte(ACCEL_YOUT_H) << 8) | slave_read_byte(ACCEL_YOUT_H + 1) ) / 1638.4 ) );
     	s=buffer;
         return s ; 
         case 2:
+    	#ifdef TEST
+			return "1.81";
+		#endif
 		sprintf(buffer, "%.2f",( ((slave_read_byte(ACCEL_ZOUT_H) << 8) | slave_read_byte(ACCEL_ZOUT_H + 1) ) / 1638.4 ) );
     	s=buffer;
         return s ; /* Aceler Z */
         case 3:
+    	#ifdef TEST
+			return "-4.55";
+		#endif
     	sprintf(buffer, "%.2f",( ((slave_read_byte(GYRO_XOUT_H) << 8) | slave_read_byte(GYRO_XOUT_H + 1) ) / 131.0 ) );
     	s=buffer;
         return s ; /* Gyrosc X */
         case 4:
+    	#ifdef TEST
+			return "0.65";
+		#endif
     	sprintf(buffer, "%.2f",( ((slave_read_byte(GYRO_YOUT_H) << 8) | slave_read_byte(GYRO_YOUT_H + 1) ) / 131.0 ) );
     	s=buffer;
         return s ; /* Gyrosc Y */
         case 5:
+    	#ifdef TEST
+			return "5.06";
+		#endif
     	sprintf(buffer, "%.2f",( ((slave_read_byte(GYRO_ZOUT_H) << 8) | slave_read_byte(GYRO_ZOUT_H + 1) ) / 131.0 ) );
     	s=buffer;
         return s ; /* Gyrosc Z */

@@ -14,4 +14,4 @@ idf_component_register(SRCS "app_main.c"
 
                     INCLUDE_DIRS ".")
                     
-add_definitions(-DESP32 -DMICROCONTROLLER -DSHELLPRINT)
+add_definitions(-DESP32 -DMICROCONTROLLER -DSHELLPRINT -DTEST)

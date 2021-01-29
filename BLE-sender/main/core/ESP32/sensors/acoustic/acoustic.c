@@ -15,6 +15,10 @@ char* s;
 
 bool check_acoustic()
 {
+	#ifdef TEST
+		return true;
+	#endif
+
     if ( gpio_get_level(ACOUSTIC_ENABLE) ) 
 	return false;
     else
@@ -42,6 +46,10 @@ void print_acoustic()
 
 char* get_acoustic()
 {
+    #ifdef TEST
+		return "High";
+	#endif
+	
     s = " ";
 
     if ( gpio_get_level(ACOUSTIC_DATA) ) 

@@ -9,6 +9,10 @@ char* s;
 
 bool check_bh1750()
 {
+	#ifdef TEST
+		return true;
+	#endif
+	
 	int ret;
 	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -38,6 +42,9 @@ void print_bh1750()
 
 char* get_bh1750()
 {
+    #ifdef TEST
+		return "182";
+	#endif
     uint8_t data_h, data_l;
     float d;
     

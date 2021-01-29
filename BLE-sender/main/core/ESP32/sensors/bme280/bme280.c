@@ -23,6 +23,10 @@ char* s;
 
 bool check_bme280()
 {   
+	#ifdef TEST
+		return true;
+	#endif
+
 	int ret;
 	i2c_cmd_handle_t cmd = i2c_cmd_link_create();
     i2c_master_start(cmd);
@@ -53,31 +57,41 @@ void print_bme280()
 
 char* get_bme280(int ind) 
 {
+	#ifndef TEST		// IF NOT flag TEST
     readCalibrationData(&cal);
     getRawData(&raw);
     t_fine = getTemperatureCalibration(&cal, raw.temperature);
     s = " ";
+   	#endif
   
-    if (ind == 0)
-    {
-	//sprintf(buffer, "%.2f", compensateTemperature(t_fine));
-	sprintf(buffer, "%.2f", ((raw.temperature/8388.6) - 40) );
-	s=buffer;
-	return s ; 
-    }
-    if (ind == 1)
-    {
-	//sprintf(buffer, "%.2f", compensateHumidity(raw.humidity, &cal, t_fine) );
-	sprintf(buffer, "%.2f", (raw.humidity/355.4) );
-	s=buffer;
-	return s ; 
-    }
-    if (ind == 2)
-    {
-	//sprintf(buffer, "%.1f", compensatePressure(raw.pressure, &cal, t_fine) / 100 );
-	sprintf(buffer, "%.2f", ((raw.pressure/1310.7) + 300) );
-	s=buffer;
-	return s ; 
+    switch (ind) 
+    {	
+    	case 0:
+		//sprintf(buffer, "%.2f", compensateTemperature(t_fine));
+		sprintf(buffer, "%.2f", ((raw.temperature/8388.6) - 40) );
+		s=buffer;
+		#ifdef TEST
+			return "24.31";
+		#endif
+		return s;
+
+		case 1:
+		//sprintf(buffer, "%.2f", compensateHumidity(raw.humidity, &cal, t_fine) );
+		sprintf(buffer, "%.2f", (raw.humidity/355.4) );
+		s=buffer;
+        #ifdef TEST
+			return "42.43";
+		#endif
+		return s; 
+		
+		case 2:
+		//sprintf(buffer, "%.1f", compensatePressure(raw.pressure, &cal, t_fine) / 100 );
+		sprintf(buffer, "%.2f", ((raw.pressure/1310.7) + 300) );
+		s=buffer;
+        #ifdef TEST
+			return "923.7";
+		#endif
+		return s; 
     }
     return "0";
 }

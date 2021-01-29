@@ -24,7 +24,7 @@ void config(struct gatt *ble)
     // Second Sensor
     strcpy(ble->service_name[1], "Environmental");
     ble->charact_TAM[1] = 4;
-    	strcpy(ble->charact_name[1][0], "Environment"); 
+    	strcpy(ble->charact_name[1][0], "Environmen"); 
     	strcpy(ble->charact_name[1][1], "Temp"); 
     	ble->isEnable[1][0] = isEnable_TemperatureExtern;
     	strcpy(ble->charact_name[1][2], "Humid"); 
@@ -94,10 +94,10 @@ void led_blinks(int led, int iter, int usec)	// LED Blink function-> led: 0 Gree
     int i;
     for (i=0;i<iter;i++)
     {
-	led_GPIO(led, 1);
-	udelay_basics (usec);
-	led_GPIO(led, 0);
-	udelay_basics (usec);
+		led_GPIO(led, 1);
+		udelay_basics (usec);
+		led_GPIO(led, 0);
+		udelay_basics (usec);
     }
 }
 
@@ -125,11 +125,10 @@ void updateData(long *c, struct gatt *ble)
 	d_collect_msg( c );
 	print_sensors_state();
     #endif  
-
 	
     /* GET DATA INTERNAL TEMPERATURE */
     strcpy(ble->charact_data[0][1], get_internal());
-	
+
     /* GET DATA BME280 */
     if (check_bme280())
     {

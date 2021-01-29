@@ -29,7 +29,7 @@ void welcome_msg()
 void d_collect_msg(long* n)
 {
     printf("---------------------------------------------------------------------------------------------------------------\n");
-    printf ("Data collect - %ld\n", *n);
+    printf ("Data updated - %ld\n", *n);
 }
 
 void print_sensors_state()
@@ -43,12 +43,6 @@ void print_sensors_state()
 	printf("	||	");
 	print_acoustic();
 	printf ("	||\n");
-}
-
-void print_json(char* js)
-{
-    printf("\nJSON: %s\n", js);
-    printf("\n	Sending Data to Tangle...\n");
 }
 
 void udelay_basics (long d)
