@@ -202,9 +202,8 @@ void create_characteristic(esp_ble_gatts_cb_param_t *param, uint8_t* uuid_name)
 		ESP_LOGI(GATTS_TAG, "CREATE_CHARACTERISTIC_EVENT, status %d,  service_handle %d\n", param->create.status, param->create.service_handle);
 		gl_profile_tab[PROFILE_A_APP_ID].service_handle = param->create.service_handle;
 		gl_profile_tab[PROFILE_A_APP_ID].char_uuid.len = ESP_UUID_LEN_128;
-		memcpy(gl_profile_tab[PROFILE_A_APP_ID].char_uuid.uuid.uuid128, uuid_name,16);	
-
-		esp_ble_gatts_start_service(gl_profile_tab[PROFILE_A_APP_ID].service_handle);
+		memcpy(gl_profile_tab[PROFILE_A_APP_ID].char_uuid.uuid.uuid128, uuid_name,16);
+		
 		a_property = ESP_GATT_CHAR_PROP_BIT_READ;
 		esp_err_t add_char_ret = esp_ble_gatts_add_char(gl_profile_tab[PROFILE_A_APP_ID].service_handle, &gl_profile_tab[PROFILE_A_APP_ID].char_uuid,
 		                                                    ESP_GATT_PERM_READ | ESP_GATT_PERM_WRITE,
@@ -328,8 +327,13 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 		}
         break;
 
-    case ESP_GATTS_CREATE_EVT:	
-    	ESP_LOGE(GATTS_TAG,"CREATION_OF_CHARS -- SERVICE CALLBACK %d\n", param->create.service_handle);
+    case ESP_GATTS_CREATE_EVT:
+   		
+   		// Start Service
+    	esp_ble_gatts_start_service(param->create.service_handle);
+    	
+    	// Creation of Characteristics of the Service
+    	ESP_LOGI(GATTS_TAG,"CREATION_OF_CHARS -- SERVICE CALLBACK %d\n", param->create.service_handle);
     	
     	save_handle(param->create.service_handle);     	// Save the handles of the services
 
@@ -349,7 +353,7 @@ static void gatts_profile_a_event_handler(esp_gatts_cb_event_t event, esp_gatt_i
 
     case ESP_GATTS_READ_EVT: 
     {
-        ESP_LOGI(GATTS_TAG, "GATT_READ_EVT, conn_id %d, trans_id %d, handle %d\n", param->read.conn_id, param->read.trans_id, param->read.handle);
+        ESP_LOGI(GATTS_TAG, "GATT_READ_EVENT, conn_id %d, trans_id %d, handle %d\n", param->read.conn_id, param->read.trans_id, param->read.handle);
         esp_gatt_rsp_t rsp;
         memset(&rsp, 0, sizeof(esp_gatt_rsp_t));
         rsp.attr_value.handle = param->read.handle;
@@ -581,9 +585,5 @@ void ble_socket(struct gatt *ble)
     }
 	
 	vTaskDelay( 2000 / portTICK_PERIOD_MS);
-	for (int i=0; i < b->service_TAM; i++)
-	{
-		ESP_LOGE(GATTS_TAG, "HANDLE DEL SERVICIO N° %d:  =  %d", i+1, b->service_handle[i]);
-	}
     return;
 }
