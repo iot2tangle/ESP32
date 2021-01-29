@@ -139,12 +139,13 @@ It only needs to be connected to the *ESP32 BLE Server* and it will be able to r
 
 Note that when you have a device connected to ESP32 BLE the Gateway will not be able to read the data.
 
-## Harcoded Data
+## Set Harcoded Data
 In the event that you do not have any *I2T Stack Sensors* sensor, you will only see the *Internal Temperature* data of the *ESP32*. If you like, you can compile with a **'flag'** that assigns hardcoded values to all available data. This way you can see numerically more complete outputs on the Tangle.
 You just need to modify the file ```ESP32/BLE-sender/main/CMakeLists.txt``` and add the ```-DTEST``` flag.
 ```
 add_definitions (-DESP32 -DMICROCONTROLLER -DSHELLPRINT -DTEST)
 ```
+This way, you can see data in the Tangle as if you had all the sensors.
 
 # Setting up the Streams BLE Gateway
 
