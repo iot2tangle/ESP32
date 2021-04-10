@@ -20,7 +20,7 @@ int main ()
     {	
 	    init_t = take_time();
 
-	    pnp_sensors();		/* re init sensors to be able to plug n play in real time */
+	    //pnp_sensors();		/* re init sensors to be able to plug n play in real time */
 
 	    getData(&dev, &count);
 

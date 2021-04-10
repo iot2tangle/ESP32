@@ -11,6 +11,19 @@
 #include "esp_console.h"
 #include "esp_vfs_fat.h"
 
+
+#define I2C_PORT_NUMBER 1
+
+#define I2C_MASTER_SCL_IO 19              			/*!< gpio number for I2C master clock */
+#define I2C_MASTER_SDA_IO 18               			/*!< gpio number for I2C master data  */
+#define I2C_MASTER_NUM I2C_NUMBER(0) 				/*!< I2C port number for master dev */
+#define I2C_MASTER_FREQ_HZ 100000        			/*!< I2C master clock frequency */
+#define I2C_MASTER_TX_BUF_DISABLE 0                 /*!< I2C master doesn't need buffer */
+#define I2C_MASTER_RX_BUF_DISABLE 0                 /*!< I2C master doesn't need buffer */
+
+i2c_port_t i2c_master_port = I2C_PORT_NUMBER;
+
+
 #define I2C_MASTER_TX_BUF_DISABLE 0 /*!< I2C master doesn't need buffer */
 #define I2C_MASTER_RX_BUF_DISABLE 0 /*!< I2C master doesn't need buffer */
 #define WRITE_BIT I2C_MASTER_WRITE  /*!< I2C master write */
@@ -19,6 +32,8 @@
 #define ACK_CHECK_DIS 0x0           /*!< I2C master will not check ack from slave */
 #define ACK_VAL 0x0                 /*!< I2C ack value */
 #define NACK_VAL 0x1                /*!< I2C nack value */
+
+static const char *TAG = "cmd_i2ctools";
 
 static gpio_num_t i2c_gpio_sda = 18;
 static gpio_num_t i2c_gpio_scl = 19;
@@ -41,8 +56,13 @@ static esp_err_t i2c_master_driver_initialize(void)
 }
 
 
+
+
 void init_i2c()
 {
+
+    //register_system();
+
     i2c_driver_install(i2c_port, I2C_MODE_MASTER, I2C_MASTER_RX_BUF_DISABLE, I2C_MASTER_TX_BUF_DISABLE, 0);
     i2c_master_driver_initialize();
         i2c_cmd_handle_t cmd = i2c_cmd_link_create();

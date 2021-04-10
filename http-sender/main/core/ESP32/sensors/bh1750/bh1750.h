@@ -5,7 +5,7 @@
 
 #define TICK_DELAY 10
 
-#define I2C_PORT_NUMBER 1
+#define I2C_PORT_NUMBER 0
 
 #define BH1750_SENSOR_ADDR 0x23   /*!< slave address for BH1750 sensor */
 #define BH1750_CMD_START 0x23   /*!< Operation mode */

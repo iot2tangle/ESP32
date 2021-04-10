@@ -7,7 +7,7 @@
 
 #define TICK_DELAY 10
 
-#define I2C_PORT_NUMBER 1
+#define I2C_PORT_NUMBER 0
 
 #define BME280_SENSOR_ADDR  0x76	/*Device Address/Identifier */
 #define WRITE_BIT 			I2C_MASTER_WRITE              /*!< I2C master write */

@@ -7,8 +7,8 @@
 #include "freertos/FreeRTOS.h"
 #include "driver/gpio.h"
 
-#define GREEN_LED 2
-#define RED_LED 15
+#define GREEN_LED 6
+#define RED_LED 7
 
 
 void init_LEDs()

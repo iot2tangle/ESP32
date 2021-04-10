@@ -67,6 +67,8 @@ void initPeripherals(long* c)
     init_i2c();
     init_SPI();
 	
+	printf("Paso bien??\n");
+	
 	init_internal(true);
     init_bme280(true);
     init_mpu6050(true);
@@ -80,10 +82,10 @@ void led_blinks(int led, int iter, int usec)	// LED Blink function-> led: 0 Gree
     int i;
     for (i=0;i<iter;i++)
     {
-	led_GPIO(led, 1);
-	udelay_basics (usec);
-	led_GPIO(led, 0);
-	udelay_basics (usec);
+		led_GPIO(led, 1);
+		udelay_basics (usec);
+		led_GPIO(led, 0);
+		udelay_basics (usec);
     }
 }
 

@@ -5,7 +5,7 @@
 
 #define TICK_DELAY 10
 
-#define I2C_PORT_NUMBER 1
+#define I2C_PORT_NUMBER 0
 
 #define MPU6050_SENSOR_ADDR	0x68	/*Device Address/Identifier for MPU6050*/
 #define WRITE_BIT 			I2C_MASTER_WRITE              /*!< I2C master write */
